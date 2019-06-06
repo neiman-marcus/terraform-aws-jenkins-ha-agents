@@ -14,7 +14,7 @@ module "jenkins_ha_agents" {
 
   admin_password = "${var.admin_password}"
   agent_max      = "${var.agent_max}"
-  agent_minx     = "${var.agent_minx}"
+  agent_min      = "${var.agent_min}"
 
   ami_name          = "${var.ami_name}"
   ami_owner         = "${var.ami_owner}"

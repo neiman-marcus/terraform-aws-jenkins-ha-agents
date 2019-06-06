@@ -2,9 +2,11 @@
 
 # terraform-aws-jenkins-ha-agents
 
-![version](https://img.shields.io/badge/version-v1.0.0-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
+![version](https://img.shields.io/badge/version-v1.0.2-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
 
 A module for deploying Jenkins in a highly available and highly scalable manner.
+
+Related blog post can be found on the [Neiman Marcus Medium page](https://medium.com/neiman-marcus-tech/developing-a-terraform-jenkins-module-dccfd4381355?source=friends_link&sk=9aa056d2da2d98ac33c7e06ecd22563f).
 
 ## Features
 
@@ -54,7 +56,7 @@ module "jenkins_ha_agents" {
 
   admin_password = "foo"
   agent_max      = 6
-  agent_minx     = 2
+  agent_min      = 2
 
   ami_name          = "amzn2-ami-hvm-2.0.*-x86_64-gp2"
   ami_owner         = "amazon"
