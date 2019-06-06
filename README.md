@@ -120,7 +120,7 @@ EOF
 ## Examples
 
 * [Full Jenkins-HA-Agents Example](https://github.com/neiman-marcus/terraform-aws-jenkins-ha-agents/tree/master/examples/full)
-* [Minimal Jenkins-HA-Agents Example](https://github.com/neiman-marcus/terraform-aws-jenkins-ha-agents/tree/master/examples/minimal)
+* [Minimum Jenkins-HA-Agents Example](https://github.com/neiman-marcus/terraform-aws-jenkins-ha-agents/tree/master/examples/minimum)
 
 ## Inputs
 
@@ -221,7 +221,7 @@ The goal is to completely define the deployment with code. If a plugin is used a
 
 ## Authors
 
-* [**Clay Danford**]((mailto:clay_danford@neimanmarcus.com)) - Project creation and development.
+* [**Clay Danford**](mailto:clay_danford@neimanmarcus.com) - Project creation and development.
 
 ## Conduct / Contributing / License
 
