@@ -2,7 +2,7 @@
 
 # terraform-aws-jenkins-ha-agents
 
-![version](https://img.shields.io/badge/version-v1.0.2-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
+![version](https://img.shields.io/badge/version-v1.1.0-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
 
 A module for deploying Jenkins in a highly available and highly scalable manner.
 
@@ -46,7 +46,7 @@ module "jenkins_ha_agents" {
 }
 ```
 
-### Full Configuration with Custom Userdata
+### Full Configuration with Custom Userdata and Plugins
 
 Note: It is better to use a template file, but the template data sources below illistrate the point.
 
@@ -66,6 +66,7 @@ module "jenkins_ha_agents" {
   bastion_sg_name = "bastion-sg"
   domain_name     = "foo.io."
 
+  custom_plugins              = "${data.template_file.custom_plugins.rendered}"
   extra_agent_userdata        = "${data.template_file.extra_agent_userdata.rendered}"
   extra_agent_userdata_merge  = "list(append)+dict(recurse_array)+str()"
   extra_master_userdata       = "${data.template_file.extra_master_userdata.rendered}"
@@ -94,6 +95,21 @@ module "jenkins_ha_agents" {
   vpc_name      = "prod-vpc"
 }
 
+data "template_file" "custom_plugins" {
+  template = <<EOF
+---
+#cloud-config
+
+write_files:
+  - path: /root/custom_plugins.txt
+    content: |
+      cloudbees-folder
+    permissions: "000400"
+    owner: root
+    group: root
+EOF
+}
+
 data "template_file" "extra_agent_userdata" {
   vars {
     foo = "bar"
@@ -102,7 +118,7 @@ data "template_file" "extra_agent_userdata" {
   template = <<EOF
 ---
 runcmd:
-- echo 'foo = ${foo}'
+  - echo 'foo = ${foo}'
 EOF
 }
 
@@ -114,7 +130,7 @@ data "template_file" "extra_master_userdata" {
   template = <<EOF
 ---
 runcmd:
-- echo 'foo = ${foo}'
+  - echo 'foo = ${foo}'
 EOF
 }
 ```
@@ -136,11 +152,12 @@ EOF
 | api_ssm_parameter | The path value of the API key, stored in ssm parameter store. | string | `/api_key` | no |
 | application | The application name, to be interpolated into many resources and tags. Unique to this project. | string | `jenkins` | no |
 | bastion_sg_name | The bastion security group name to allow to ssh to the master/agents. | string | `N/A` | yes |
+| custom_plugins | Custom plugins to install when bootstrapping. Created from a template outside of the module. | string | `empty` | no |
 | domain_name | The root domain name used to lookup the route53 zone information. | string | `N/A` | yes |
 | executors | The number of executors to assign to each agent. Must be an even number, divisible by two. | int | `4` | no |
-| extra_agent_userdata | Extra agent user-data to add to the default built-in. | string | `empty` | no |
+| extra_agent_userdata | Extra agent user-data to add to the default built-in. Created from a template outside of the module. | string | `empty` | no |
 | extra_agent_userdata_merge | Control how cloud-init merges custom agent user-data sections. | string | `list(append)+dict(recurse_array)+str()` | no |
-| extra_master_userdata | Extra master user-data to add to the default built-in. | string | `empty` | no |
+| extra_master_userdata | Extra master user-data to add to the default built-in. Created from a template outside of the module. | string | `empty` | no |
 | extra_master_userdata_merge | Control how cloud-init merges custom master user-data sections. | string | `list(append)+dict(recurse_array)+str()` | no |
 | instance_type | The type of instance to use for both ASG's. | string | `t2.large` | no |
 | jenkins_version | The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group. | string | `2.164.3` | no |

@@ -36,6 +36,11 @@ variable "bastion_sg_name" {
   description = "The bastion security group name to allow to ssh to the master/agents."
 }
 
+variable "custom_plugins" {
+  default     = ""
+  description = "Custom plugins to install alongside the defaults. Pull from outside the module."
+}
+
 variable "domain_name" {
   description = "The root domain name used to lookup the route53 zone information."
 }
@@ -47,22 +52,22 @@ variable "executors" {
 
 variable "extra_agent_userdata" {
   default     = ""
-  description = "Extra agent user-data to add to the default built-in"
+  description = "Extra agent user-data to add to the default built-in."
 }
 
 variable "extra_agent_userdata_merge" {
   default     = "list(append)+dict(recurse_array)+str()"
-  description = "Control how cloud-init merges extra agent user-data sections"
+  description = "Control how cloud-init merges extra agent user-data sections."
 }
 
 variable "extra_master_userdata" {
   default     = ""
-  description = "Extra master user-data to add to the default built-in"
+  description = "Extra master user-data to add to the default built-in."
 }
 
 variable "extra_master_userdata_merge" {
   default     = "list(append)+dict(recurse_array)+str()"
-  description = "Control how cloud-init merges extra master user-data sections"
+  description = "Control how cloud-init merges extra master user-data sections."
 }
 
 variable "instance_type" {
