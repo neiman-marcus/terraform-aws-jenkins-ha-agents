@@ -1,4 +1,4 @@
-# Full Jenkins-HA-Agents Example with Custom Userdata
+# Full Jenkins-HA-Agents Example with Custom Userdata and Plugins.
 
 Configuration in the directory provides the entire jenkins-ha-agents solution with every variable to be defined locally.
 

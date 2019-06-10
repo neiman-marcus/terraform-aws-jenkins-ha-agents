@@ -665,6 +665,12 @@ data "template_cloudinit_config" "master_init" {
 
   part {
     content_type = "text/cloud-config"
+    content      = "${var.custom_plugins}"
+    merge_type   = "list(append)+dict(recurse_array)+str()"
+  }
+
+  part {
+    content_type = "text/cloud-config"
     content      = "${data.template_file.master_runcmd.rendered}"
   }
 

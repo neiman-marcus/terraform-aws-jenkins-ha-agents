@@ -24,6 +24,7 @@ module "jenkins_ha_agents" {
   bastion_sg_name = "${var.bastion_sg_name}"
   domain_name     = "${var.domain_name}"
 
+  custom_plugins              = "${data.template_file.custom_plugins.rendered}"
   extra_agent_userdata        = "${data.template_file.extra_agent_userdata.rendered}"
   extra_agent_userdata_merge  = "list(append)+dict(recurse_array)+str()"
   extra_master_userdata       = "${data.template_file.extra_master_userdata.rendered}"
@@ -54,7 +55,7 @@ module "jenkins_ha_agents" {
 }
 
 data "template_file" "extra_agent_userdata" {
-  template = "${file("${path.module}/init/extra-agent-userdata.cfg")}"
+  template = "${file("init/extra-agent-userdata.cfg")}"
 
   vars {
     foo = "bar"
@@ -62,9 +63,13 @@ data "template_file" "extra_agent_userdata" {
 }
 
 data "template_file" "extra_master_userdata" {
-  template = "${file("${path.module}/init/extra-master-userdata.cfg")}"
+  template = "${file("init/extra-master-userdata.cfg")}"
 
   vars {
     foo = "bar"
   }
+}
+
+data "template_file" "custom_plugins" {
+  template = "${file("init/custom_plugins.cfg")}"
 }
