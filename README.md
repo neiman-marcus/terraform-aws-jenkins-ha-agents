@@ -2,7 +2,7 @@
 
 # terraform-aws-jenkins-ha-agents
 
-![version](https://img.shields.io/badge/version-v1.1.2-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
+![version](https://img.shields.io/badge/version-v1.1.3-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
 
 A module for deploying Jenkins in a highly available and highly scalable manner.
 
@@ -74,7 +74,7 @@ module "jenkins_ha_agents" {
 
   executors              = "4"
   instance_type          = "t2.large"
-  jenkins_version        = "2.164.3"
+  jenkins_version        = "2.176.1"
   password_ssm_parameter = "/admin_password"
 
   private_cidr_ingress    = ["10.0.0.0/8"]

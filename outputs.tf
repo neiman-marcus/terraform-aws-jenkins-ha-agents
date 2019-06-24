@@ -27,3 +27,8 @@ output "r53_record_fqdn" {
   value       = "${aws_route53_record.r53_record.fqdn}"
   description = "The fqdn of the route 53 record."
 }
+
+output "r53_zone_id" {
+  value       = "${data.aws_route53_zone.r53_zone.zone_id}"
+  description = "The route 53 zone id."
+}
