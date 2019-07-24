@@ -34,3 +34,6 @@ override.tf.json
 # Ignore tfplan and logs.
 *.tfplan
 *.log
+
+# Misc
+TODO

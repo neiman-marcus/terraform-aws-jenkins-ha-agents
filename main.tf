@@ -425,10 +425,10 @@ data "template_file" "agent_runcmd" {
   template = "${file("${path.module}/init/agent-runcmd.cfg")}"
 
   vars {
+    api_ssm_parameter = "${var.ssm_parameter}${var.api_ssm_parameter}"
     aws_region        = "${var.region}"
     master_asg        = "${aws_autoscaling_group.master_asg.name}"
     swarm_version     = "${var.swarm_version}"
-    api_ssm_parameter = "${var.ssm_parameter}${var.api_ssm_parameter}"
   }
 }
 
@@ -691,12 +691,12 @@ data "template_file" "master_write_files" {
   template = "${file("${path.module}/init/master-write-files.cfg")}"
 
   vars {
-    aws_region        = "${var.region}"
     admin_password    = "${var.admin_password}"
+    api_ssm_parameter = "${var.ssm_parameter}${var.api_ssm_parameter}"
+    application       = "${var.application}"
+    aws_region        = "${var.region}"
     executors_min     = "${var.agent_min * var.executors}"
     master_logs       = "${aws_cloudwatch_log_group.master_logs.name}"
-    application       = "${var.application}"
-    api_ssm_parameter = "${var.ssm_parameter}${var.api_ssm_parameter}"
   }
 }
 
@@ -704,9 +704,9 @@ data "template_file" "master_runcmd" {
   template = "${file("${path.module}/init/master-runcmd.cfg")}"
 
   vars {
+    admin_password  = "${var.admin_password}"
     aws_region      = "${var.region}"
     jenkins_version = "${var.jenkins_version}"
-    admin_password  = "${var.admin_password}"
     master_storage  = "${aws_efs_file_system.master_efs.id}"
   }
 }

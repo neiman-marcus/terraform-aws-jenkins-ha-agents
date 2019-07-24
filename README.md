@@ -2,7 +2,7 @@
 
 # terraform-aws-jenkins-ha-agents
 
-![version](https://img.shields.io/badge/version-v1.1.3-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
+![version](https://img.shields.io/badge/version-v1.1.4-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
 
 A module for deploying Jenkins in a highly available and highly scalable manner.
 
@@ -37,6 +37,7 @@ module "jenkins_ha_agents" {
   public_subnet_name_az2  = "public-subnet-b"
 
   r53_record = "jenkins.foo.io"
+  region     = "us-west-2"
 
   ssl_certificate = "*.foo.io"
   ssm_parameter   = "/jenkins/foo"
@@ -86,6 +87,7 @@ module "jenkins_ha_agents" {
   public_subnet_name_az2 = "public-subnet-b"
 
   r53_record      = "jenkins.foo.io"
+  region          = "us-west-2"
   spot_price      = "0.0928"
   ssl_certificate = "*.foo.io"
 
@@ -187,6 +189,7 @@ EOF
 | lb_zone_id | The canonical hosted zone ID of the load balancer. |
 | r53_record_name | The name of the route 53 record. |
 | r53_record_fqdn | The fqdn of the route 53 record. |
+| r53_zone_id | The route 53 zone id. |
 
 ## Known Issues/Limitations
 
