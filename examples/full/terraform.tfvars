@@ -18,7 +18,7 @@ executors = "4"
 
 instance_type = "t2.large"
 
-jenkins_version = "2.164.3"
+jenkins_version = "2.176.2"
 
 password_ssm_parameter = "/admin_password"
 
@@ -44,6 +44,6 @@ ssl_certificate = "*.foo.io"
 
 ssm_parameter = "/jenkins/foo"
 
-swarm_version = "3.15"
+swarm_version = "3.17"
 
 vpc_name = "prod-vpc"
