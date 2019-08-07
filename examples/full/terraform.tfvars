@@ -10,6 +10,8 @@ api_ssm_parameter = "/api_key"
 
 application = "jenkins"
 
+auto_update_plugins_cron = "0 0 31 2 *"
+
 bastion_sg_name = "bastion-sg"
 
 domain_name = "foo.io."

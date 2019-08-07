@@ -691,12 +691,13 @@ data "template_file" "master_write_files" {
   template = "${file("${path.module}/init/master-write-files.cfg")}"
 
   vars {
-    admin_password    = "${var.admin_password}"
-    api_ssm_parameter = "${var.ssm_parameter}${var.api_ssm_parameter}"
-    application       = "${var.application}"
-    aws_region        = "${var.region}"
-    executors_min     = "${var.agent_min * var.executors}"
-    master_logs       = "${aws_cloudwatch_log_group.master_logs.name}"
+    admin_password           = "${var.admin_password}"
+    api_ssm_parameter        = "${var.ssm_parameter}${var.api_ssm_parameter}"
+    application              = "${var.application}"
+    auto_update_plugins_cron = "${var.auto_update_plugins_cron}"
+    aws_region               = "${var.region}"
+    executors_min            = "${var.agent_min * var.executors}"
+    master_logs              = "${aws_cloudwatch_log_group.master_logs.name}"
   }
 }
 
@@ -781,7 +782,7 @@ resource "aws_lb_target_group" "master_tg" {
     path                = "/login"
     timeout             = 25
     healthy_threshold   = 2
-    unhealthy_threshold = 2
+    unhealthy_threshold = 4
     matcher             = "200-299"
   }
 

@@ -32,6 +32,11 @@ variable "application" {
   default     = "jenkins"
 }
 
+variable "auto_update_plugins_cron" {
+  description = "Cron to set to auto update plugins. The default is set to February 31st, disabling this functionality. Overwrite this variable to have plugins auto update."
+  default     = "0 0 31 2 *"
+}
+
 variable "bastion_sg_name" {
   description = "The bastion security group name to allow to ssh to the master/agents."
 }
