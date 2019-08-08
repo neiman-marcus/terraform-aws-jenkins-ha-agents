@@ -2,7 +2,7 @@
 
 # terraform-aws-jenkins-ha-agents
 
-![version](https://img.shields.io/badge/version-v1.1.4-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
+![version](https://img.shields.io/badge/version-v1.2.0-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
 
 A module for deploying Jenkins in a highly available and highly scalable manner.
 
@@ -16,6 +16,7 @@ Related blog post can be found on the [Neiman Marcus Medium page](https://medium
 * Complete Infrastructure as code deployment, no plugin configuration required
 * Spot instance pricing for agents
 * Custom user data available
+* Auto update plugins
 
 ## Usage
 
@@ -62,6 +63,8 @@ module "jenkins_ha_agents" {
   ami_name          = "amzn2-ami-hvm-2.0.*-x86_64-gp2"
   ami_owner         = "amazon"
   api_ssm_parameter = "/api_key"
+
+  auto_update_plugins_cron = "0 0 31 2 *"
 
   application     = "jenkins"
   bastion_sg_name = "bastion-sg"
@@ -153,6 +156,7 @@ EOF
 | ami_owner | The owner of the amzn2 ami. | string | `amazon` | no |
 | api_ssm_parameter | The path value of the API key, stored in ssm parameter store. | string | `/api_key` | no |
 | application | The application name, to be interpolated into many resources and tags. Unique to this project. | string | `jenkins` | no |
+| auto_update_plugins_cron| Cron to set to auto update plugins. The default is set to February 31st, disabling this functionality. Overwrite this variable to have plugins auto update. | string | `0 0 31 2 *` | no |
 | bastion_sg_name | The bastion security group name to allow to ssh to the master/agents. | string | `N/A` | yes |
 | custom_plugins | Custom plugins to install when bootstrapping. Created from a template outside of the module. | string | `empty` | no |
 | domain_name | The root domain name used to lookup the route53 zone information. | string | `N/A` | yes |
@@ -224,6 +228,10 @@ Agents scale based on CPU, and on the Jenkins build queue. The master node will 
 ### Updating Jenkins/SWARM Version
 
 To update Jenkins or the SWARM plugin, update the variable in the terraform.tfvars files and redeploy the stack. The master will rebuild with the new version of Jenkins, maintaining configuration on the EFS volume. The agents will redeploy with the new version of SWARM.
+
+### Auto Updating Plugins
+
+The master has the ability to check for plugin updates, and automatically install them. By default, this feature is disabled. To enable it, set the `auto_update_plugins_cron` argument. Finally, it saves the list of plugins, located in `/var/lib/jenkins/plugin-updates/archive` for further review. You are encouraged to use something like AWS Backup to take daily backups of your EFS volume, and set the cron to a time during a maintenance window.
 
 ## Diagram
 

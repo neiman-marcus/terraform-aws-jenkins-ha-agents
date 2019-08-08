@@ -24,6 +24,8 @@ module "jenkins_ha_agents" {
   bastion_sg_name = "${var.bastion_sg_name}"
   domain_name     = "${var.domain_name}"
 
+  auto_update_plugins_cron = "${var.auto_update_plugins_cron}"
+
   custom_plugins              = "${data.template_file.custom_plugins.rendered}"
   extra_agent_userdata        = "${data.template_file.extra_agent_userdata.rendered}"
   extra_agent_userdata_merge  = "list(append)+dict(recurse_array)+str()"
