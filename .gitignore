@@ -36,4 +36,4 @@ override.tf.json
 *.log
 
 # Misc
-TODO
+.idea
