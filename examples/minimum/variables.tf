@@ -53,3 +53,4 @@ variable "ssm_parameter" {
 variable "vpc_name" {
   description = "The name of the VPC the infrastructure will be deployed to."
 }
+
