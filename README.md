@@ -2,7 +2,7 @@
 
 # terraform-aws-jenkins-ha-agents
 
-![version](https://img.shields.io/badge/version-v2.0.0-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
+![version](https://img.shields.io/badge/version-v2.0.1-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
 
 A module for deploying Jenkins in a highly available and highly scalable manner.
 
@@ -34,7 +34,7 @@ To be used with a local map of tags.
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.0.0
+  version = "2.0.1"
 
   admin_password  = "foo"
   bastion_sg_name = "bastion-sg"
@@ -51,7 +51,7 @@ module "jenkins_ha_agents" {
   ssl_certificate = "*.foo.io"
   ssm_parameter   = "/jenkins/foo"
 
-  tags     = "${local.tags}"
+  tags     = local.tags
   vpc_name = "prod-vpc"
 }
 ```
@@ -63,7 +63,7 @@ Note: It is better to use a template file, but the template data sources below i
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.0.0"
+  version = "2.0.1"
 
   admin_password = "foo"
   agent_max      = 6
@@ -79,15 +79,15 @@ module "jenkins_ha_agents" {
   bastion_sg_name = "bastion-sg"
   domain_name     = "foo.io."
 
-  custom_plugins              = "${data.template_file.custom_plugins.rendered}"
-  extra_agent_userdata        = "${data.template_file.extra_agent_userdata.rendered}"
+  custom_plugins              = data.template_file.custom_plugins.rendered
+  extra_agent_userdata        = data.template_file.extra_agent_userdata.rendered
   extra_agent_userdata_merge  = "list(append)+dict(recurse_array)+str()"
-  extra_master_userdata       = "${data.template_file.extra_master_userdata.rendered}"
+  extra_master_userdata       = data.template_file.extra_master_userdata.rendered
   extra_master_userdata_merge = "list(append)+dict(recurse_array)+str()"
 
   executors              = "4"
   instance_type          = "t2.large"
-  jenkins_version        = "2.176.1"
+  jenkins_version        = "2.176.2"
   password_ssm_parameter = "/admin_password"
 
   private_cidr_ingress    = ["10.0.0.0/8"]
@@ -105,7 +105,7 @@ module "jenkins_ha_agents" {
 
   ssm_parameter = "/jenkins/foo"
   swarm_version = "3.15"
-  tags          = "${local.tags}"
+  tags          = local.tags
   vpc_name      = "prod-vpc"
 }
 
