@@ -92,7 +92,7 @@ variable "password_ssm_parameter" {
 
 variable "private_cidr_ingress" {
   description = "Private IP address cidr ranges allowed access to the instances."
-  type        = "list"
+  type        = list(string)
   default     = ["10.0.0.0/8"]
 }
 
@@ -106,7 +106,7 @@ variable "private_subnet_name_az2" {
 
 variable "public_cidr_ingress" {
   description = "Public IP address cidr ranges allowed access to the instances."
-  type        = "list"
+  type        = list(string)
   default     = ["0.0.0.0/0"]
 }
 
@@ -128,7 +128,7 @@ variable "region" {
 
 variable "spot_price" {
   description = "The spot price map for each instance type."
-  type        = "map"
+  type        = map(string)
 
   default = {
     "t2.micro"  = "0.0116"
@@ -154,9 +154,10 @@ variable "swarm_version" {
 
 variable "tags" {
   description = "tags to define locally, and interpolate into the tags in this module."
-  type        = "map"
+  type        = map(string)
 }
 
 variable "vpc_name" {
   description = "The name of the VPC the infrastructure will be deployed to."
 }
+
