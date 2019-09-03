@@ -40,7 +40,7 @@ data "aws_instances" "jenkins_master" {
 }
 
 output "master_private_ip" {
-  value = "${data.aws_instances.jenkins_master.private_ips[0]}]"
+  value = "${data.aws_instances.jenkins_master.private_ips[0]}"
 }
 
 output "agent_security_group_id" {
