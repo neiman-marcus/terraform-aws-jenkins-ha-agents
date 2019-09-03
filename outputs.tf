@@ -32,3 +32,17 @@ output "r53_zone_id" {
   value       = "${data.aws_route53_zone.r53_zone.zone_id}"
   description = "The route 53 zone id."
 }
+
+data "aws_instances" "jenkins_master" {
+  instance_tags = {
+    Name = "${var.application}-master"
+  }
+}
+
+output "master_private_ip" {
+  value = "${data.aws_instances.jenkins_master.private_ips[0]}]"
+}
+
+output "agent_security_group_id" {
+  value = aws_security_group.agent_sg.id
+}
