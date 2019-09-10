@@ -254,7 +254,7 @@ resource "aws_launch_configuration" "agent_lc" {
   root_block_device {
     volume_type           = "gp2"
     volume_size           = 8
-    delete_on_termination = false
+    delete_on_termination = true
   }
 
   lifecycle {
@@ -518,7 +518,7 @@ resource "aws_launch_configuration" "master_lc" {
   root_block_device {
     volume_type           = "gp2"
     volume_size           = 25
-    delete_on_termination = false
+    delete_on_termination = true
   }
 
   lifecycle {
