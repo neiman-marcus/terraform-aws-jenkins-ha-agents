@@ -20,7 +20,7 @@ locals {
 
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.0.1"
+  version = "2.1.0"
 
   admin_password = var.admin_password
   agent_max      = var.agent_max
@@ -47,13 +47,9 @@ module "jenkins_ha_agents" {
   jenkins_version        = var.jenkins_version
   password_ssm_parameter = var.password_ssm_parameter
 
-  private_cidr_ingress    = var.private_cidr_ingress
-  private_subnet_name_az1 = var.private_subnet_name_az1
-  private_subnet_name_az2 = var.private_subnet_name_az2
-
-  public_cidr_ingress    = var.public_cidr_ingress
-  public_subnet_name_az1 = var.public_subnet_name_az1
-  public_subnet_name_az2 = var.public_subnet_name_az2
+  cidr_ingress        = var.cidr_ingress
+  private_subnet_name = var.private_subnet_name
+  public_subnet_name  = var.public_subnet_name
 
   r53_record      = var.r53_record
   region          = var.region

@@ -14,27 +14,25 @@ auto_update_plugins_cron = "0 0 31 2 *"
 
 bastion_sg_name = "bastion-sg"
 
+cidr_ingress = ["0.0.0.0/0"]
+
+contact = "admin@foo.io"
+
 domain_name = "foo.io."
 
-executors = "4"
+environment = "prod"
+
+executors = 4
 
 instance_type = "t2.large"
 
-jenkins_version = "2.176.2"
+jenkins_version = "2.176.3"
 
 password_ssm_parameter = "/admin_password"
 
-private_cidr_ingress = ["10.0.0.0/8"]
+private_subnet_name = "private-subnet-*"
 
-private_subnet_name_az1 = "private-subnet-a"
-
-private_subnet_name_az2 = "private-subnet-b"
-
-public_cidr_ingress = ["0.0.0.0/0"]
-
-public_subnet_name_az1 = "public-subnet-a"
-
-public_subnet_name_az2 = "public-subnet-b"
+public_subnet_name = "public-subnet-*"
 
 r53_record = "jenkins.foo.io"
 

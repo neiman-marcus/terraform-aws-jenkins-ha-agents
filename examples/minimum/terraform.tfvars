@@ -6,13 +6,9 @@ domain_name = "foo.io."
 
 environment = "prod"
 
-private_subnet_name_az1 = "private-subnet-a"
+private_subnet_name = "private-subnet-*"
 
-private_subnet_name_az2 = "private-subnet-b"
-
-public_subnet_name_az1 = "public-subnet-a"
-
-public_subnet_name_az2 = "public-subnet-b"
+public_subnet_name = "public-subnet-*"
 
 r53_record = "jenkins.foo.io"
 

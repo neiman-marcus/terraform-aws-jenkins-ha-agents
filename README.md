@@ -2,7 +2,7 @@
 
 # terraform-aws-jenkins-ha-agents
 
-![version](https://img.shields.io/badge/version-v2.0.1-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
+![version](https://img.shields.io/badge/version-v2.1.0-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
 
 A module for deploying Jenkins in a highly available and highly scalable manner.
 
@@ -40,10 +40,8 @@ module "jenkins_ha_agents" {
   bastion_sg_name = "bastion-sg"
   domain_name     = "foo.io."
 
-  private_subnet_name_az1 = "private-subnet-a"
-  private_subnet_name_az2 = "private-subnet-b"
-  public_subnet_name_az1  = "public-subnet-a"
-  public_subnet_name_az2  = "public-subnet-b"
+  private_subnet_name = "private-subnet-*"
+  public_subnet_name  = "public-subnet-*"
 
   r53_record = "jenkins.foo.io"
   region     = "us-west-2"
@@ -87,16 +85,12 @@ module "jenkins_ha_agents" {
 
   executors              = "4"
   instance_type          = "t2.large"
-  jenkins_version        = "2.176.2"
+  jenkins_version        = "2.176.3"
   password_ssm_parameter = "/admin_password"
 
-  private_cidr_ingress    = ["10.0.0.0/8"]
-  private_subnet_name_az1 = "private-subnet-a"
-  private_subnet_name_az2 = "private-subnet-b"
-
-  public_cidr_ingress    = ["0.0.0.0/0"]
-  public_subnet_name_az1 = "public-subnet-a"
-  public_subnet_name_az2 = "public-subnet-b"
+  cidr_ingress        = ["0.0.0.0/0"]
+  private_subnet_name = "private-subnet-*"
+  public_subnet_name  = "public-subnet-*"
 
   r53_record      = "jenkins.foo.io"
   region          = "us-west-2"
@@ -167,6 +161,7 @@ EOF
 | application | The application name, to be interpolated into many resources and tags. Unique to this project. | string | `jenkins` | no |
 | auto_update_plugins_cron| Cron to set to auto update plugins. The default is set to February 31st, disabling this functionality. Overwrite this variable to have plugins auto update. | string | `0 0 31 2 *` | no |
 | bastion_sg_name | The bastion security group name to allow to ssh to the master/agents. | string | `N/A` | yes |
+| cidr_ingress | IP address cidr ranges allowed access to the LB. | string | `["0.0.0.0/0"]` | no |
 | custom_plugins | Custom plugins to install when bootstrapping. Created from a template outside of the module. | string | `empty` | no |
 | domain_name | The root domain name used to lookup the route53 zone information. | string | `N/A` | yes |
 | executors | The number of executors to assign to each agent. Must be an even number, divisible by two. | int | `4` | no |
@@ -175,14 +170,10 @@ EOF
 | extra_master_userdata | Extra master user-data to add to the default built-in. Created from a template outside of the module. | string | `empty` | no |
 | extra_master_userdata_merge | Control how cloud-init merges custom master user-data sections. | string | `list(append)+dict(recurse_array)+str()` | no |
 | instance_type | The type of instance to use for both ASG's. | string | `t2.large` | no |
-| jenkins_version | The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group. | string | `2.164.3` | no |
+| jenkins_version | The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group. | string | `2.176.3` | no |
 | password_ssm_parameter | The path value of the master admin passowrd, stored in ssm parameter store. | string | `/admin_password` | no |
-| private_cidr_ingress | Private IP address cidr ranges allowed access to the instances. | string | `["10.0.0.0/8"]`| no |
-| private_subnet_name_az1 | The name prefix of the private subnet in the first AZ to pull in as a data source. | string | `N/A` | yes |
-| private_subnet_name_az2 | The name prefix of the private subnet in the second AZ to pull in as a data source. | string | `N/A` | yes |
-| public_cidr_ingress | Public IP address cidr ranges allowed access to the instances. | string | `["0.0.0.0/0"]` | no |
-| public_subnet_name_az1 | The name prefix of the public subnet in the first AZ to pull in as a data source. | string | `N/A` | yes |
-| public_subnet_name_az2 | The name prefix of the public subnet in the second AZ to pull in as a data source. | string | `N/A` | yes |
+| private_subnet_name | The name prefix of the private subnets to pull in as a data source. | string | `N/A` | yes |
+| public_subnet_name | The name prefix of the public subnets to pull in as a data source. | string | `N/A` | yes |
 | r53_record | The FQDN for the route 53 record. | string | `N/A` | yes |
 | region | The AWS region to deploy the infrastructure too. | string | `N/A` | yes |
 | spot_price | The spot price map for each instance type. | map | `t2.micro=0.0116, t2.large=0.0928, t2.xlarge=0.1856` | no |
@@ -207,6 +198,16 @@ EOF
 ## Known Issues/Limitations
 
 N/A
+
+## Breaking Changes
+
+### v2.1.0
+
+ * This version of the module pulls all public and private subnets using a wildcard.
+   * This allows for more than two hardcoded subnets.
+   * You may have to destroy several resources and create them again, including mount targets.
+   * As long as you do not delete your EFS volume, there should be no data loss.
+ * Cidr blocks have been consolidated to reduce redundant configuration.
 
 ## How it works
 

@@ -8,6 +8,7 @@ variable "bastion_sg_name" {
 
 variable "contact" {
   description = "The email of the contact who owns or manages this infrastructure."
+  default     = "admin@foo.io"
 }
 
 variable "domain_name" {
@@ -16,22 +17,15 @@ variable "domain_name" {
 
 variable "environment" {
   description = "The environment type, prod or nonprod."
+  default     = "prod"
 }
 
-variable "private_subnet_name_az1" {
-  description = "The name prefix of the private subnet in the first AZ to pull in as a data source."
+variable "private_subnet_name" {
+  description = "The name prefix of the private subnets to pull in as a data source."
 }
 
-variable "private_subnet_name_az2" {
-  description = "The name prefix of the private subnet in the second AZ to pull in as a data source."
-}
-
-variable "public_subnet_name_az1" {
-  description = "The name prefix of the public subnet in the first AZ to pull in as a data source."
-}
-
-variable "public_subnet_name_az2" {
-  description = "The name prefix of the public subnet in the second AZ to pull in as a data source."
+variable "public_subnet_name" {
+  description = "The name prefix of the public subnets to pull in as a data source."
 }
 
 variable "r53_record" {
