@@ -34,39 +34,19 @@ data "aws_vpc" "vpc" {
   }
 }
 
-data "aws_subnet" "private_subnet_az1" {
+data "aws_subnet_ids" "private" {
   vpc_id = data.aws_vpc.vpc.id
 
-  filter {
-    name   = "tag:Name"
-    values = [var.private_subnet_name_az1]
+  tags = {
+    Name = var.private_subnet_name
   }
 }
 
-data "aws_subnet" "private_subnet_az2" {
+data "aws_subnet_ids" "public" {
   vpc_id = data.aws_vpc.vpc.id
 
-  filter {
-    name   = "tag:Name"
-    values = [var.private_subnet_name_az2]
-  }
-}
-
-data "aws_subnet" "public_subnet_az1" {
-  vpc_id = data.aws_vpc.vpc.id
-
-  filter {
-    name   = "tag:Name"
-    values = [var.public_subnet_name_az1]
-  }
-}
-
-data "aws_subnet" "public_subnet_az2" {
-  vpc_id = data.aws_vpc.vpc.id
-
-  filter {
-    name   = "tag:Name"
-    values = [var.public_subnet_name_az2]
+  tags = {
+    Name = var.public_subnet_name
   }
 }
 
@@ -88,7 +68,7 @@ resource "aws_lb" "lb" {
   internal                   = false
   name                       = "${var.application}-lb"
   security_groups            = [aws_security_group.lb_sg.id]
-  subnets                    = [data.aws_subnet.public_subnet_az1.id, data.aws_subnet.public_subnet_az2.id]
+  subnets                    = data.aws_subnet_ids.public.ids
   enable_deletion_protection = false
 
   tags = merge(
@@ -108,14 +88,7 @@ resource "aws_security_group" "lb_sg" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = var.public_cidr_ingress
-  }
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = var.private_cidr_ingress
+    cidr_blocks = var.cidr_ingress
   }
 
   egress {
@@ -214,7 +187,7 @@ resource "aws_autoscaling_group" "agent_asg" {
   launch_configuration = aws_launch_configuration.agent_lc.name
   name                 = aws_launch_configuration.agent_lc.name
 
-  vpc_zone_identifier = [data.aws_subnet.private_subnet_az1.id, data.aws_subnet.private_subnet_az2.id]
+  vpc_zone_identifier = data.aws_subnet_ids.private.ids
 
   tag {
     key                 = "Name"
@@ -463,20 +436,19 @@ resource "aws_autoscaling_policy" "agent_scale_down_policy" {
 
 resource "aws_autoscaling_group" "master_asg" {
   depends_on = [
-    aws_efs_mount_target.mount_target_a,
-    aws_efs_mount_target.mount_target_b,
+    aws_efs_mount_target.mount_targets
   ]
 
   max_size = 1
   min_size = 1
 
-  health_check_grace_period = 900
+  health_check_grace_period = 1200
   health_check_type         = "ELB"
 
   launch_configuration = aws_launch_configuration.master_lc.name
   name                 = aws_launch_configuration.master_lc.name
 
-  vpc_zone_identifier = [data.aws_subnet.private_subnet_az1.id, data.aws_subnet.private_subnet_az2.id]
+  vpc_zone_identifier = data.aws_subnet_ids.private.ids
 
   target_group_arns = [aws_lb_target_group.master_tg.arn]
 
@@ -740,15 +712,11 @@ resource "aws_efs_file_system" "master_efs" {
   )
 }
 
-resource "aws_efs_mount_target" "mount_target_a" {
-  file_system_id  = aws_efs_file_system.master_efs.id
-  subnet_id       = data.aws_subnet.private_subnet_az1.id
-  security_groups = [aws_security_group.master_storage_sg.id]
-}
+resource "aws_efs_mount_target" "mount_targets" {
+  for_each = toset(data.aws_subnet_ids.private.ids)
 
-resource "aws_efs_mount_target" "mount_target_b" {
   file_system_id  = aws_efs_file_system.master_efs.id
-  subnet_id       = data.aws_subnet.private_subnet_az2.id
+  subnet_id       = each.key
   security_groups = [aws_security_group.master_storage_sg.id]
 }
 

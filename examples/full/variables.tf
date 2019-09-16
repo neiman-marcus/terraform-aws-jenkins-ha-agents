@@ -41,8 +41,15 @@ variable "bastion_sg_name" {
   description = "The bastion security group name to allow to ssh to the master/agents."
 }
 
+variable "cidr_ingress" {
+  description = "IP address cidr ranges allowed access to the LB."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
 variable "contact" {
   description = "The email of the contact who owns or manages this infrastructure."
+  default     = "admin@foo.io"
 }
 
 variable "domain_name" {
@@ -66,7 +73,7 @@ variable "instance_type" {
 
 variable "jenkins_version" {
   description = "The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group."
-  default     = "2.176.2"
+  default     = "2.176.3"
 }
 
 variable "password_ssm_parameter" {
@@ -74,32 +81,12 @@ variable "password_ssm_parameter" {
   default     = "/admin_password"
 }
 
-variable "private_cidr_ingress" {
-  description = "Private IP address cidr ranges allowed access to the instances."
-  type        = list(string)
-  default     = ["10.0.0.0/8"]
+variable "private_subnet_name" {
+  description = "The name prefix of the private subnets to pull in as a data source."
 }
 
-variable "private_subnet_name_az1" {
-  description = "The name prefix of the private subnet in the first AZ to pull in as a data source."
-}
-
-variable "private_subnet_name_az2" {
-  description = "The name prefix of the private subnet in the second AZ to pull in as a data source."
-}
-
-variable "public_cidr_ingress" {
-  description = "Public IP address cidr ranges allowed access to the instances."
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
-}
-
-variable "public_subnet_name_az1" {
-  description = "The name prefix of the public subnet in the first AZ to pull in as a data source."
-}
-
-variable "public_subnet_name_az2" {
-  description = "The name prefix of the public subnet in the second AZ to pull in as a data source."
+variable "public_subnet_name" {
+  description = "The name prefix of the public subnets to pull in as a data source."
 }
 
 variable "r53_record" {
