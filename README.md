@@ -28,7 +28,6 @@ To be used with a local map of tags.
 module "jenkins_ha_agents" {
   source = "neiman-marcus/jenkins-ha-agents/aws"
 
-  admin_password  = "foo"
   bastion_sg_name = "bastion-sg"
   domain_name     = "foo.io."
 
@@ -56,7 +55,6 @@ Note: It is better to use a template file, but the template data sources below i
 module "jenkins_ha_agents" {
   source = "neiman-marcus/jenkins-ha-agents/aws"
 
-  admin_password = "foo"
   agent_max      = 6
   agent_min      = 2
 
@@ -149,7 +147,6 @@ EOF
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| admin_password | The master admin password. Used to bootstrap and login to the master. Also pushed to ssm parameter store for posterity. | string | `N/A` | yes |
 | agent_max | The maximum number of agents to run in the agent ASG. | int | `6` | no |
 | agent_min | The minimum number of agents to run in the agent ASG. | int | `2` | no |
 | ami_name | The name of the amzn2 ami. Used for searching for AMI id. | string | `amzn2-ami-hvm-2.0.*-x86_64-gp2`| no |

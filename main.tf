@@ -728,7 +728,7 @@ data "template_file" "master_runcmd" {
   vars = {
     admin_password  = var.admin_password
     aws_region      = var.region
-    jenkins_version = var.jenkins_version
+    jenkins_version = random_string.admin_password.keepers.jenkins_version
     master_storage  = aws_efs_file_system.master_efs.id
   }
 }
@@ -835,6 +835,16 @@ resource "aws_ssm_parameter" "admin_password" {
   name        = "${var.ssm_parameter}${var.password_ssm_parameter}"
   description = "${var.application}-admin-password"
   type        = "SecureString"
-  value       = var.admin_password
+  value       = random_string.admin_password.result
   overwrite   = true
 }
+
+resource "random_string" "admin_password" {
+  length = 16
+  special = true
+  keepers = {
+    jenkins_version = var.jenkins_version
+  }
+}
+
+
