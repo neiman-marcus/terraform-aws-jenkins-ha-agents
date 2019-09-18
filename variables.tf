@@ -1,7 +1,3 @@
-variable "admin_password" {
-  description = "The master admin password. Used to bootstrap and login to the master. Also pushed to ssm parameter store for posterity."
-}
-
 variable "agent_max" {
   description = "The maximum number of agents to run in the agent ASG."
   default     = 6
