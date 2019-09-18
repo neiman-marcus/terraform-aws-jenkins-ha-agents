@@ -712,7 +712,7 @@ data "template_file" "master_write_files" {
   template = file("${path.module}/init/master-write-files.cfg")
 
   vars = {
-    admin_password           = var.admin_password
+    admin_password           = random_string.admin_password.result
     api_ssm_parameter        = "${var.ssm_parameter}${var.api_ssm_parameter}"
     application              = var.application
     auto_update_plugins_cron = var.auto_update_plugins_cron
@@ -726,7 +726,7 @@ data "template_file" "master_runcmd" {
   template = file("${path.module}/init/master-runcmd.cfg")
 
   vars = {
-    admin_password  = var.admin_password
+    admin_password  = random_string.admin_password.result
     aws_region      = var.region
     jenkins_version = random_string.admin_password.keepers.jenkins_version
     master_storage  = aws_efs_file_system.master_efs.id
