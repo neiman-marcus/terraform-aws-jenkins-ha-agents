@@ -156,3 +156,7 @@ variable "tags" {
 variable "vpc_name" {
   description = "The name of the VPC the infrastructure will be deployed to."
 }
+
+variable "agent_volume_size" {
+  description = "The size of the agents root volume."
+}
