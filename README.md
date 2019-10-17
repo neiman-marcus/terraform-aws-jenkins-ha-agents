@@ -2,7 +2,7 @@
 
 # terraform-aws-jenkins-ha-agents
 
-![version](https://img.shields.io/badge/version-v2.1.0-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
+![version](https://img.shields.io/badge/version-v2.1.1-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
 
 A module for deploying Jenkins in a highly available and highly scalable manner.
 
@@ -34,7 +34,7 @@ To be used with a local map of tags.
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.1.0"
+  version = "2.1.1"
 
   admin_password  = "foo"
   bastion_sg_name = "bastion-sg"
@@ -61,7 +61,7 @@ Note: It is better to use a template file, but the template data sources below i
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.1.0"
+  version = "2.1.1"
 
   admin_password = "foo"
   agent_max      = 6
@@ -85,7 +85,7 @@ module "jenkins_ha_agents" {
 
   executors              = "4"
   instance_type          = "t2.large"
-  jenkins_version        = "2.176.3"
+  jenkins_version        = "2.190.1"
   password_ssm_parameter = "/admin_password"
 
   cidr_ingress        = ["0.0.0.0/0"]
@@ -170,7 +170,7 @@ EOF
 | extra_master_userdata | Extra master user-data to add to the default built-in. Created from a template outside of the module. | string | `empty` | no |
 | extra_master_userdata_merge | Control how cloud-init merges custom master user-data sections. | string | `list(append)+dict(recurse_array)+str()` | no |
 | instance_type | The type of instance to use for both ASG's. | string | `t2.large` | no |
-| jenkins_version | The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group. | string | `2.176.3` | no |
+| jenkins_version | The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group. | string | `2.190.1` | no |
 | password_ssm_parameter | The path value of the master admin passowrd, stored in ssm parameter store. | string | `/admin_password` | no |
 | private_subnet_name | The name prefix of the private subnets to pull in as a data source. | string | `N/A` | yes |
 | public_subnet_name | The name prefix of the public subnets to pull in as a data source. | string | `N/A` | yes |
