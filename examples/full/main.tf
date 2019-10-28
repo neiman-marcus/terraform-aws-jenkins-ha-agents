@@ -20,11 +20,15 @@ locals {
 
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.1.1"
+  version = "2.2.0"
 
-  admin_password = var.admin_password
-  agent_max      = var.agent_max
-  agent_min      = var.agent_min
+  admin_password    = var.admin_password
+  agent_max         = var.agent_max
+  agent_min         = var.agent_min
+  agent_volume_size = var.agent_volume_size
+
+  efs_mode                   = var.efs_mode
+  efs_provisioned_throughput = var.efs_provisioned_throughput
 
   ami_name          = var.ami_name
   ami_owner         = var.ami_owner

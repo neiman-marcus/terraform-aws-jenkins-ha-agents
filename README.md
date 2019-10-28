@@ -2,7 +2,7 @@
 
 # terraform-aws-jenkins-ha-agents
 
-![version](https://img.shields.io/badge/version-v2.1.1-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
+![version](https://img.shields.io/badge/version-v2.2.0-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
 
 A module for deploying Jenkins in a highly available and highly scalable manner.
 
@@ -34,7 +34,7 @@ To be used with a local map of tags.
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.1.1"
+  version = "2.2.0"
 
   admin_password  = "foo"
   bastion_sg_name = "bastion-sg"
@@ -61,17 +61,21 @@ Note: It is better to use a template file, but the template data sources below i
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.1.1"
+  version = "2.2.0"
 
-  admin_password = "foo"
-  agent_max      = 6
-  agent_min      = 2
+  admin_password    = "foo"
+  agent_max         = 6
+  agent_min         = 2
+  agent_volume_size = 16
 
   ami_name          = "amzn2-ami-hvm-2.0.*-x86_64-gp2"
   ami_owner         = "amazon"
   api_ssm_parameter = "/api_key"
 
   auto_update_plugins_cron = "0 0 31 2 *"
+
+  efs_mode                   = "provisioned"
+  efs_provisioned_throughput = 3
 
   application     = "jenkins"
   bastion_sg_name = "bastion-sg"
@@ -155,6 +159,7 @@ EOF
 | admin_password | The master admin password. Used to bootstrap and login to the master. Also pushed to ssm parameter store for posterity. | string | `N/A` | yes |
 | agent_max | The maximum number of agents to run in the agent ASG. | int | `6` | no |
 | agent_min | The minimum number of agents to run in the agent ASG. | int | `2` | no |
+| agent_volume_size | The size of the agent volume. | int | `16` | no |
 | ami_name | The name of the amzn2 ami. Used for searching for AMI id. | string | `amzn2-ami-hvm-2.0.*-x86_64-gp2`| no |
 | ami_owner | The owner of the amzn2 ami. | string | `amazon` | no |
 | api_ssm_parameter | The path value of the API key, stored in ssm parameter store. | string | `/api_key` | no |
@@ -164,6 +169,8 @@ EOF
 | cidr_ingress | IP address cidr ranges allowed access to the LB. | string | `["0.0.0.0/0"]` | no |
 | custom_plugins | Custom plugins to install when bootstrapping. Created from a template outside of the module. | string | `empty` | no |
 | domain_name | The root domain name used to lookup the route53 zone information. | string | `N/A` | yes |
+| efs_mode | The EFS throughput mode. Options are bursting and provisioned. To set the provisioned throughput in mibps, configure `efs_provisioned_throughput` variable. | string | `bursting` | no |
+| efs_provisioned_throughput | The EFS provisioned throughput in mibps. Ignored if EFS throughput mode is set to bursting. | int | `3` | no |
 | executors | The number of executors to assign to each agent. Must be an even number, divisible by two. | int | `4` | no |
 | extra_agent_userdata | Extra agent user-data to add to the default built-in. Created from a template outside of the module. | string | `empty` | no |
 | extra_agent_userdata_merge | Control how cloud-init merges custom agent user-data sections. | string | `list(append)+dict(recurse_array)+str()` | no |
