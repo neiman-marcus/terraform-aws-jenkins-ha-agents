@@ -62,7 +62,7 @@ variable "domain_name" {
 }
 
 variable "efs_mode" {
-  default     = "provisioned"
+  default     = "bursting"
   description = "The EFS throughput mode. Options are bursting and provisioned. To set the provisioned throughput in mibps, configure efs_provisioned_throughput variable."
 }
 
