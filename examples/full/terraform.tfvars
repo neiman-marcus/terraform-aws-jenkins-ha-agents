@@ -2,6 +2,8 @@ agent_max = 6
 
 agent_minx = 2
 
+agent_volume_size = 16
+
 ami_name = "amzn2-ami-hvm-2.0.*-x86_64-gp2"
 
 ami_owner = "amazon"
@@ -19,6 +21,10 @@ cidr_ingress = ["0.0.0.0/0"]
 contact = "admin@foo.io"
 
 domain_name = "foo.io."
+
+efs_mode = "bursting"
+
+efs_provisioned_throughput = 3
 
 environment = "prod"
 

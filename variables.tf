@@ -12,6 +12,11 @@ variable "agent_min" {
   default     = 2
 }
 
+variable "agent_volume_size" {
+  description = "The size of the agent volume."
+  default     = 16
+}
+
 variable "ami_name" {
   description = "The name of the amzn2 ami. Used for searching for AMI id."
   default     = "amzn2-ami-hvm-2.0.*-x86_64-gp2"
@@ -54,6 +59,16 @@ variable "custom_plugins" {
 
 variable "domain_name" {
   description = "The root domain name used to lookup the route53 zone information."
+}
+
+variable "efs_mode" {
+  default     = "bursting"
+  description = "The EFS throughput mode. Options are bursting and provisioned. To set the provisioned throughput in mibps, configure efs_provisioned_throughput variable."
+}
+
+variable "efs_provisioned_throughput" {
+  default     = 3
+  description = "The EFS provisioned throughput in mibps. Ignored if EFS throughput mode is set to bursting."
 }
 
 variable "executors" {

@@ -219,8 +219,8 @@ resource "aws_launch_configuration" "agent_lc" {
 
   root_block_device {
     volume_type           = "gp2"
-    volume_size           = 8
-    delete_on_termination = false
+    volume_size           = var.agent_volume_size
+    delete_on_termination = true
   }
 
   lifecycle {
@@ -481,7 +481,7 @@ resource "aws_launch_configuration" "master_lc" {
   root_block_device {
     volume_type           = "gp2"
     volume_size           = 25
-    delete_on_termination = false
+    delete_on_termination = true
   }
 
   lifecycle {
@@ -703,6 +703,9 @@ resource "aws_efs_file_system" "master_efs" {
   creation_token   = "${var.application}-master-efs"
   encrypted        = true
   performance_mode = "generalPurpose"
+
+  throughput_mode                 = var.efs_mode
+  provisioned_throughput_in_mibps = var.efs_mode == "provisioned" ? var.efs_provisioned_throughput : null
 
   tags = merge(
     var.tags,
