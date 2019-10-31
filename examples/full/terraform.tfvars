@@ -32,7 +32,7 @@ executors = 4
 
 instance_type = "t2.large"
 
-jenkins_version = "2.190.1"
+jenkins_version = "2.190.2"
 
 password_ssm_parameter = "/admin_password"
 
