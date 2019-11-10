@@ -1,3 +1,8 @@
+output "agent_iam_role" {
+  value       = aws_iam_role.agent_iam_role
+  description = "The agent IAM role attributes."
+}
+
 output "lb_arn_suffix" {
   value       = aws_lb.lb.arn_suffix
   description = "The ARN suffix of the load balancer."
@@ -18,6 +23,11 @@ output "lb_zone_id" {
   description = "The canonical hosted zone ID of the load balancer."
 }
 
+output "master_iam_role" {
+  value       = aws_iam_role.master_iam_role
+  description = "The master IAM role attributes."
+}
+
 output "r53_record_name" {
   value       = aws_route53_record.r53_record.name
   description = "The name of the route 53 record."
@@ -32,4 +42,3 @@ output "r53_zone_id" {
   value       = data.aws_route53_zone.r53_zone.zone_id
   description = "The route 53 zone id."
 }
-

@@ -2,7 +2,7 @@
 
 # terraform-aws-jenkins-ha-agents
 
-![version](https://img.shields.io/badge/version-v2.2.1-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
+![version](https://img.shields.io/badge/version-v2.2.2-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
 
 A module for deploying Jenkins in a highly available and highly scalable manner.
 
@@ -34,7 +34,7 @@ To be used with a local map of tags.
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.2.1"
+  version = "2.2.2"
 
   admin_password  = "foo"
   bastion_sg_name = "bastion-sg"
@@ -61,7 +61,7 @@ Note: It is better to use a template file, but the template data sources below i
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.2.1"
+  version = "2.2.2"
 
   admin_password    = "foo"
   agent_max         = 6
@@ -194,10 +194,12 @@ EOF
 
 | Name | Description |
 |------|-------------|
+| agent_iam_role | The agent IAM role attributes. |
 | lb_arn_suffix | The ARN suffix of the load balancer. |
 | lb_dns_name | The DNS name of the load balancer. |
 | lb_id | The ID/ARN of the load balancer. |
 | lb_zone_id | The canonical hosted zone ID of the load balancer. |
+| master_iam_role | The master IAM role attributes |
 | r53_record_name | The name of the route 53 record. |
 | r53_record_fqdn | The fqdn of the route 53 record. |
 | r53_zone_id | The route 53 zone id. |
