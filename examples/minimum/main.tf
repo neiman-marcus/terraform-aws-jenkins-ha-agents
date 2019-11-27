@@ -20,7 +20,7 @@ locals {
 
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.2.2"
+  version = "2.2.3"
 
   admin_password  = var.admin_password
   bastion_sg_name = var.bastion_sg_name
