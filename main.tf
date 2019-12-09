@@ -185,7 +185,7 @@ resource "aws_autoscaling_group" "agent_asg" {
   health_check_type         = "EC2"
 
   launch_configuration = aws_launch_configuration.agent_lc.name
-  name                 = aws_launch_configuration.agent_lc.name
+  name_prefix          = "${var.application}-agent-"
 
   vpc_zone_identifier = data.aws_subnet_ids.private.ids
 
@@ -446,7 +446,8 @@ resource "aws_autoscaling_group" "master_asg" {
   health_check_type         = "ELB"
 
   launch_configuration = aws_launch_configuration.master_lc.name
-  name                 = aws_launch_configuration.master_lc.name
+  name_prefix          = "${var.application}-master-"
+
 
   vpc_zone_identifier = data.aws_subnet_ids.private.ids
 
