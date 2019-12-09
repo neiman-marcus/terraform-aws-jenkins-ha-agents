@@ -162,3 +162,8 @@ variable "vpc_name" {
   description = "The name of the VPC the infrastructure will be deployed to."
 }
 
+variable "key_name" {
+  default     = ""
+  description = "Key name to launch the instances"
+}
+

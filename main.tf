@@ -213,6 +213,7 @@ resource "aws_launch_configuration" "agent_lc" {
   security_groups      = [aws_security_group.agent_sg.id]
 
   user_data_base64 = data.template_cloudinit_config.agent_init.rendered
+  key_name         = var.key_name
 
   enable_monitoring = true
   ebs_optimized     = false
@@ -474,6 +475,7 @@ resource "aws_launch_configuration" "master_lc" {
   security_groups      = [aws_security_group.master_sg.id]
 
   user_data_base64 = data.template_cloudinit_config.master_init.rendered
+  key_name         = var.key_name
 
   enable_monitoring = true
   ebs_optimized     = false
