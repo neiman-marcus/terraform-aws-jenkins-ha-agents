@@ -212,7 +212,7 @@ resource "aws_launch_configuration" "agent_lc" {
   iam_instance_profile = aws_iam_instance_profile.agent_ip.name
   security_groups      = [aws_security_group.agent_sg.id]
 
-  user_data = data.template_cloudinit_config.agent_init.rendered
+  user_data_base64 = data.template_cloudinit_config.agent_init.rendered
 
   enable_monitoring = true
   ebs_optimized     = false
@@ -365,8 +365,8 @@ resource "aws_cloudwatch_log_group" "agent_logs" {
 }
 
 data "template_cloudinit_config" "agent_init" {
-  gzip          = false
-  base64_encode = false
+  gzip          = true
+  base64_encode = true
 
   part {
     filename     = "agent.cfg"
@@ -473,7 +473,7 @@ resource "aws_launch_configuration" "master_lc" {
   iam_instance_profile = aws_iam_instance_profile.master_ip.name
   security_groups      = [aws_security_group.master_sg.id]
 
-  user_data = data.template_cloudinit_config.master_init.rendered
+  user_data_base64 = data.template_cloudinit_config.master_init.rendered
 
   enable_monitoring = true
   ebs_optimized     = false
@@ -637,8 +637,8 @@ resource "aws_cloudwatch_log_group" "master_logs" {
 }
 
 data "template_cloudinit_config" "master_init" {
-  gzip          = false
-  base64_encode = false
+  gzip          = true
+  base64_encode = true
 
   part {
     filename     = "master.cfg"
