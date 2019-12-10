@@ -428,7 +428,7 @@ data "template_file" "agent_end" {
 
 resource "aws_autoscaling_policy" "agent_scale_up_policy" {
   name                   = "${var.application}-agent-up-policy"
-  scaling_adjustment     = 1
+  scaling_adjustment     = var.scale_up_number
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 150
   autoscaling_group_name = aws_autoscaling_group.agent_asg.name
@@ -436,7 +436,7 @@ resource "aws_autoscaling_policy" "agent_scale_up_policy" {
 
 resource "aws_autoscaling_policy" "agent_scale_down_policy" {
   name                   = "${var.application}-agent-down-policy"
-  scaling_adjustment     = -1
+  scaling_adjustment     = var.scale_down_number
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 180
   autoscaling_group_name = aws_autoscaling_group.agent_asg.name
