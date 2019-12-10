@@ -106,6 +106,11 @@ variable "jenkins_version" {
   default     = "2.190.3"
 }
 
+variable "key_name" {
+  default     = null
+  description = "SSH Key to launch instances."
+}
+
 variable "password_ssm_parameter" {
   description = "The path value of the master admin passowrd, stored in ssm parameter store."
   default     = "/admin_password"
@@ -125,6 +130,16 @@ variable "r53_record" {
 
 variable "region" {
   description = "The AWS region to deploy the infrastructure too."
+}
+
+variable "scale_up_number" {
+  default     = 1
+  description = "Number of agents to create when scaling up."
+}
+
+variable "scale_down_number" {
+  default     = -1
+  description = "Number of agents to destroy when scaling down."
 }
 
 variable "spot_price" {
@@ -160,14 +175,4 @@ variable "tags" {
 
 variable "vpc_name" {
   description = "The name of the VPC the infrastructure will be deployed to."
-}
-
-variable "scale_up_number" {
-  default     = 1
-  description = "Number of machines to create when scaling up"
-}
-
-variable "scale_down_number" {
-  default     = -1
-  description = "Number of machines to destroy when scaling down"
 }

@@ -34,6 +34,8 @@ instance_type = "t2.large"
 
 jenkins_version = "2.190.3"
 
+key_name = "foo"
+
 password_ssm_parameter = "/admin_password"
 
 private_subnet_name = "private-subnet-*"

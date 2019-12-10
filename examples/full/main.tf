@@ -20,7 +20,7 @@ locals {
 
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.2.3"
+  version = "2.2.6"
 
   admin_password    = var.admin_password
   agent_max         = var.agent_max
@@ -37,6 +37,8 @@ module "jenkins_ha_agents" {
   application     = var.application
   bastion_sg_name = var.bastion_sg_name
   domain_name     = var.domain_name
+
+  key_name = var.key_name
 
   auto_update_plugins_cron = var.auto_update_plugins_cron
 

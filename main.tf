@@ -91,6 +91,13 @@ resource "aws_security_group" "lb_sg" {
     cidr_blocks = var.cidr_ingress
   }
 
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = var.cidr_ingress
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -213,6 +220,7 @@ resource "aws_launch_configuration" "agent_lc" {
   security_groups      = [aws_security_group.agent_sg.id]
 
   user_data_base64 = data.template_cloudinit_config.agent_init.rendered
+  key_name         = var.key_name
 
   enable_monitoring = true
   ebs_optimized     = false
@@ -474,6 +482,7 @@ resource "aws_launch_configuration" "master_lc" {
   security_groups      = [aws_security_group.master_sg.id]
 
   user_data_base64 = data.template_cloudinit_config.master_init.rendered
+  key_name         = var.key_name
 
   enable_monitoring = true
   ebs_optimized     = false
@@ -786,6 +795,22 @@ resource "aws_lb_listener" "master_lb_listener" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.master_tg.arn
+  }
+}
+
+resource "aws_lb_listener" "master_http_listener" {
+  load_balancer_arn = aws_lb.lb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
 
