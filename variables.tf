@@ -162,3 +162,12 @@ variable "vpc_name" {
   description = "The name of the VPC the infrastructure will be deployed to."
 }
 
+variable "scale_up_number" {
+  default     = 1
+  description = "Number of machines to create when scaling up"
+}
+
+variable "scale_down_number" {
+  default     = -1
+  description = "Number of machines to destroy when scaling down"
+}
