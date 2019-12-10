@@ -117,6 +117,16 @@ variable "region" {
   description = "The AWS region to deploy the infrastructure too."
 }
 
+variable "scale_down_number" {
+  default     = -1
+  description = "Number of agents to destroy when scaling down."
+}
+
+variable "scale_up_number" {
+  default     = 1
+  description = "Number of agents to create when scaling up."
+}
+
 variable "spot_price" {
   description = "The spot price map for each instance type."
   type        = map(string)

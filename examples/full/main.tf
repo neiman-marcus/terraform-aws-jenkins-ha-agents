@@ -38,7 +38,9 @@ module "jenkins_ha_agents" {
   bastion_sg_name = var.bastion_sg_name
   domain_name     = var.domain_name
 
-  key_name = var.key_name
+  key_name          = var.key_name
+  scale_down_number = var.scale_down_number
+  scale_up_number   = var.scale_up_number
 
   auto_update_plugins_cron = var.auto_update_plugins_cron
 

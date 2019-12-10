@@ -81,7 +81,9 @@ module "jenkins_ha_agents" {
   bastion_sg_name = "bastion-sg"
   domain_name     = "foo.io."
 
-  key_name = "foo"
+  key_name          = "foo"
+  scale_down_number = -1
+  scale_up_number   = 1
 
   custom_plugins              = data.template_file.custom_plugins.rendered
   extra_agent_userdata        = data.template_file.extra_agent_userdata.rendered
@@ -186,6 +188,8 @@ EOF
 | public_subnet_name | The name prefix of the public subnets to pull in as a data source. | string | `N/A` | yes |
 | r53_record | The FQDN for the route 53 record. | string | `N/A` | yes |
 | region | The AWS region to deploy the infrastructure too. | string | `N/A` | yes |
+| scale_down_number | Number of agents to destroy when scaling down. | int | `-1` | no |
+| scale_up_number | Number of agents to create when scaling up. | int | `1` | no |
 | spot_price | The spot price map for each instance type. | map | `t2.micro=0.0116, t2.large=0.0928, t2.xlarge=0.1856` | no |
 | ssl_certificate | The name of the SSL certificate to use on the load balancer. | string | `N/A` | yes |
 | ssm_parameter | The full ssm parameter path that will house the api key and master admin password. Also used to grant IAM access to this resource. | string | `N/A` | yes |

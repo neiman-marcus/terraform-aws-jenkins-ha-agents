@@ -46,6 +46,10 @@ r53_record = "jenkins.foo.io"
 
 region = "us-east-1"
 
+scale_down_number = -1
+
+scale_up_number = 1
+
 spot_price = "0.0928"
 
 ssl_certificate = "*.foo.io"
