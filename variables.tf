@@ -163,7 +163,7 @@ variable "vpc_name" {
 }
 
 variable "key_name" {
-  default     = ""
+  default     = null
   description = "Key name to launch the instances"
 }
 
