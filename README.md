@@ -2,7 +2,7 @@
 
 # terraform-aws-jenkins-ha-agents
 
-![version](https://img.shields.io/badge/version-v2.2.3-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
+![version](https://img.shields.io/badge/version-v2.2.6-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
 
 A module for deploying Jenkins in a highly available and highly scalable manner.
 
@@ -34,7 +34,7 @@ To be used with a local map of tags.
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.2.3"
+  version = "2.2.6"
 
   admin_password  = "foo"
   bastion_sg_name = "bastion-sg"
@@ -61,7 +61,7 @@ Note: It is better to use a template file, but the template data sources below i
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.2.3"
+  version = "2.2.6"
 
   admin_password    = "foo"
   agent_max         = 6
@@ -80,6 +80,8 @@ module "jenkins_ha_agents" {
   application     = "jenkins"
   bastion_sg_name = "bastion-sg"
   domain_name     = "foo.io."
+
+  key_name = "foo"
 
   custom_plugins              = data.template_file.custom_plugins.rendered
   extra_agent_userdata        = data.template_file.extra_agent_userdata.rendered
@@ -178,6 +180,7 @@ EOF
 | extra_master_userdata_merge | Control how cloud-init merges custom master user-data sections. | string | `list(append)+dict(recurse_array)+str()` | no |
 | instance_type | The type of instance to use for both ASG's. | string | `t2.large` | no |
 | jenkins_version | The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group. | string | `2.190.3` | no |
+| key_name | SSH Key to launch instances. | string | `null` | no |
 | password_ssm_parameter | The path value of the master admin passowrd, stored in ssm parameter store. | string | `/admin_password` | no |
 | private_subnet_name | The name prefix of the private subnets to pull in as a data source. | string | `N/A` | yes |
 | public_subnet_name | The name prefix of the public subnets to pull in as a data source. | string | `N/A` | yes |

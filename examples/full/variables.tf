@@ -91,6 +91,11 @@ variable "jenkins_version" {
   default     = "2.190.3"
 }
 
+variable "key_name" {
+  default     = null
+  description = "SSH Key to launch instances."
+}
+
 variable "password_ssm_parameter" {
   description = "The path value of the master admin passowrd, stored in ssm parameter store."
   default     = "/admin_password"
