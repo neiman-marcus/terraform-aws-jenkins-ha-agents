@@ -32,7 +32,7 @@ executors = 4
 
 instance_type = "t2.large"
 
-jenkins_version = "2.190.3"
+jenkins_version = "2.204.1"
 
 key_name = "foo"
 
