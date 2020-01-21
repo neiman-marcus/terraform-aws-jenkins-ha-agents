@@ -112,13 +112,13 @@ variable "key_name" {
 }
 
 variable "match_agent_asg_lc_names" {
-    default     = true
-    description = "Should the agent ASG and LC names match? This will re-hydrate the ASG and instances for changes to LC."
+  default     = true
+  description = "Should the agent ASG and LC names match? This will re-hydrate the ASG and instances for changes to LC."
 }
 
 variable "match_master_asg_lc_names" {
-    default     = true
-    description = "Should the master ASG and LC names match? This will re-hydrate the ASG and instances for changes to LC."
+  default     = true
+  description = "Should the master ASG and LC names match? This will re-hydrate the ASG and instances for changes to LC."
 }
 
 variable "password_ssm_parameter" {

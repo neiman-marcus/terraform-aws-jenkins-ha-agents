@@ -63,6 +63,107 @@ data "aws_iam_policy" "amazon_ec2_role_for_ssm" {
   arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
+data "aws_iam_policy_document" "agent_assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = "ec2.amazonaws.com"
+    }
+  }
+}
+
+data "aws_iam_policy_document" "agent_inline_policy" {
+  statement {
+    actions = [
+      "ec2:DescribeInstances",
+      "autoscaling:DescribeAutoScalingGroups"
+    ]
+    effect  = "Allow"
+    resources = "*"
+  }
+
+  statement {
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:DescribeLogStreams"
+    ]
+    effect  = "Allow"
+    resources = aws_cloudwatch_log_group.agent_logs.arn
+  }
+
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+    resources = "*"
+  }
+
+  statement {
+    actions = ["ssm:GetParameter"]
+    effect  = "Allow"
+    resources = "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter${var.ssm_parameter}${var.api_ssm_parameter}"
+  }
+
+  statement {
+    actions = ["ec2:TerminateInstances"]
+    effect  = "Allow"
+    resources = "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:instance/*"
+    condition {
+      test = "StringEquals"
+      variable = "ec2:ResourceTag/Name"
+      values = "${var.application}-agent"
+    }
+  }
+}
+
+data "aws_iam_policy_document" "master_assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = "ec2.amazonaws.com"
+    }
+  }
+}
+
+data "aws_iam_polcy_document" "master_inline_policy" {
+  statement {
+    actions = ["cloudwatch:PutMetricData"]
+    effect = "Allow"
+    Resource = "*"
+  }
+
+  statement {
+    actions = [
+      "ec2:DescribeInstances",
+      "autoscaling:DescribeAutoScalingGroups"
+    ]
+    effect = "Allow"
+    resources = "*"
+  }
+
+  statement {
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:DescribeLogStreams"
+    ]
+    effect = "Allow"
+    resource = aws_cloudwatch_log_group.master_logs.arn
+  }
+
+  statement {
+    actions = ["ssm:PutParameter"]
+    effect = "Allow"
+    resources = "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter${var.ssm_parameter}${var.api_ssm_parameter}"
+  }
+}
+
 resource "aws_lb" "lb" {
   idle_timeout               = 60
   internal                   = false
@@ -275,21 +376,7 @@ resource "aws_iam_role" "agent_iam_role" {
   name = "${var.application}-agent-iam-role"
   path = "/"
 
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Effect": "Allow"
-    }
-  ]
-}
-EOF
-
+  assume_role_policy = data.aws_iam_policy_document.agent_assume_role_policy.json
 
   tags = merge(
     var.tags,
@@ -302,58 +389,7 @@ EOF
 resource "aws_iam_role_policy" "agent_inline_policy" {
   name = "${var.application}-agent-inline-policy"
   role = aws_iam_role.agent_iam_role.id
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "ec2:DescribeInstances",
-        "autoscaling:DescribeAutoScalingGroups"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    },
-    {
-      "Action": [
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents",
-        "logs:DescribeLogStreams"
-      ],
-      "Effect": "Allow",
-      "Resource": "${aws_cloudwatch_log_group.agent_logs.arn}"
-    },
-    {
-      "Action": [
-        "sts:AssumeRole"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    },
-    {
-      "Action": "ssm:GetParameter",
-      "Effect": "Allow",
-      "Resource": [
-        "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter${var.ssm_parameter}${var.api_ssm_parameter}"
-      ]
-    },
-    {
-      "Action": "ec2:TerminateInstances",
-      "Effect": "Allow",
-      "Resource":[
-        "arn:aws:ec2:${var.region}:${data.aws_caller_identity.current.account_id}:instance/*"
-      ],
-      "Condition":{
-        "StringEquals":{
-            "ec2:ResourceTag/Name":"${var.application}-agent"
-        }
-      }
-    }
-  ]
-}
-EOF
+  policy = data.aws_iam_policy_document.agent_inline_policy.json
 
 }
 
@@ -553,22 +589,7 @@ resource "aws_iam_instance_profile" "master_ip" {
 resource "aws_iam_role" "master_iam_role" {
   name = "${var.application}-master-iam-role"
   path = "/"
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Effect": "Allow"
-    }
-  ]
-}
-EOF
-
+  assume_role_policy = data.aws_iam_policy_document.master_assume_role_policy.json
 
   tags = merge(
     var.tags,
@@ -581,54 +602,7 @@ EOF
 resource "aws_iam_role_policy" "master_inline_policy" {
   name = "${var.application}-master-inline-policy"
   role = aws_iam_role.master_iam_role.id
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "cloudwatch:PutMetricData"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    },
-    {
-      "Action": [
-        "ec2:DescribeInstances",
-        "autoscaling:DescribeAutoScalingGroups"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    },
-    {
-      "Action": [
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents",
-        "logs:DescribeLogStreams"
-      ],
-      "Effect": "Allow",
-      "Resource": "${aws_cloudwatch_log_group.master_logs.arn}"
-    },
-    {
-      "Action": [
-        "sts:AssumeRole"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    },
-    {
-      "Action": "ssm:PutParameter",
-      "Effect": "Allow",
-      "Resource": [
-        "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter${var.ssm_parameter}${var.api_ssm_parameter}"
-      ]
-    }
-  ]
-}
-EOF
-
+  policy = data.aws_iam_policy_document.master_inline_policy
 }
 
 resource "aws_iam_role_policy_attachment" "master_policy_attachment" {
