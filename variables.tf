@@ -160,3 +160,8 @@ variable "vpc_name" {
 variable "agent_volume_size" {
   description = "The size of the agents root volume."
 }
+
+variable "efs_provisioned_throughput_in_mibps" {
+  description = "If specified, sets EFS to provisioned mode and sets MiB/Sec throughput provisioned rate"
+  default = null
+}
