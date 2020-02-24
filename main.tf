@@ -740,6 +740,9 @@ resource "aws_efs_file_system" "master_efs" {
   encrypted        = true
   performance_mode = "generalPurpose"
 
+  throughput_mode                 = var.efs_provisioned_throughput_in_mibps == null ? "bursting" : "provisioned"
+  provisioned_throughput_in_mibps = var.efs_provisioned_throughput_in_mibps
+
   tags = merge(
     var.tags,
     map(
