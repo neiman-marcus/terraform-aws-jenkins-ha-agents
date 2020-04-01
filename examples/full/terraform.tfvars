@@ -32,7 +32,7 @@ executors = 4
 
 instance_type = "t2.large"
 
-jenkins_version = "2.204.2"
+jenkins_version = "2.222.1"
 
 key_name = "foo"
 
@@ -60,6 +60,6 @@ ssl_certificate = "*.foo.io"
 
 ssm_parameter = "/jenkins/foo"
 
-swarm_version = "3.17"
+swarm_version = "3.19"
 
 vpc_name = "prod-vpc"

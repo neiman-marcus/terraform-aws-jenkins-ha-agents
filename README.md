@@ -96,7 +96,7 @@ module "jenkins_ha_agents" {
 
   executors              = "4"
   instance_type          = "t2.large"
-  jenkins_version        = "2.204.2"
+  jenkins_version        = "2.222.1"
   password_ssm_parameter = "/admin_password"
 
   cidr_ingress        = ["0.0.0.0/0"]
@@ -109,7 +109,7 @@ module "jenkins_ha_agents" {
   ssl_certificate = "*.foo.io"
 
   ssm_parameter = "/jenkins/foo"
-  swarm_version = "3.15"
+  swarm_version = "3.19"
   tags          = local.tags
   vpc_name      = "prod-vpc"
 }
@@ -184,7 +184,7 @@ EOF
 | extra_master_userdata | Extra master user-data to add to the default built-in. Created from a template outside of the module. | string | `empty` | no |
 | extra_master_userdata_merge | Control how cloud-init merges custom master user-data sections. | string | `list(append)+dict(recurse_array)+str()` | no |
 | instance_type | The type of instance to use for both ASG's. | string | `t2.large` | no |
-| jenkins_version | The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group. | string | `2.204.2` | no |
+| jenkins_version | The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group. | string | `2.222.1` | no |
 | key_name | SSH Key to launch instances. | string | `null` | no |
 | match_agent_asg_lc_names | Should the agent ASG and LC names match? This will re-hydrate the ASG and instances for changes to LC. | bool | `true` |
 | match_master_asg_lc_names | Should the master ASG and LC names match? This will re-hydrate the ASG and instances for changes to LC. | bool | `true` |
@@ -198,7 +198,7 @@ EOF
 | spot_price | The spot price map for each instance type. | map | `t2.micro=0.0116, t2.large=0.0928, t2.xlarge=0.1856` | no |
 | ssl_certificate | The name of the SSL certificate to use on the load balancer. | string | `N/A` | yes |
 | ssm_parameter | The full ssm parameter path that will house the api key and master admin password. Also used to grant IAM access to this resource. | string | `N/A` | yes |
-| swarm_version | The version of swarm plugin to install on the agents. Update by updating this value. | int | `3.15` | no |
+| swarm_version | The version of swarm plugin to install on the agents. Update by updating this value. | int | `3.19` | no |
 | tags | tags to define locally, and interpolate into the tags in this module. | string | `N/A` | yes |
 | vpc_name | The name of the VPC the infrastructure will be deployed to. | string | `N/A` | yes |
 
@@ -219,6 +219,17 @@ EOF
 ## Known Issues/Limitations
 
 N/A
+
+## Notes
+
+* It can take a decent amount of time for initial master bootstrap (approx 11 minutes on t2.micro).
+  * This is normal, and sped up by higher instance types.
+  * After the master is built and EFS is populated with Jenkins installation configuration, master boot times come down considerably.
+* During initial bootstrapping the master reboots several times.
+* You should not need to change the admin password in the Jenkins wizard.
+  * This is done through bootstrapping.
+  * If you run through the wizard and it asks you to change the admin password, wait a short time and reload the page.
+  * Do not click 'Continue as admin' on the password reset page, just wait and reload.
 
 ## Breaking Changes
 
