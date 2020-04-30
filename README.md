@@ -2,7 +2,7 @@
 
 # terraform-aws-jenkins-ha-agents
 
-![version](https://img.shields.io/badge/version-v2.4.0-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
+![version](https://img.shields.io/badge/version-v2.4.1-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
 
 A module for deploying Jenkins in a highly available and highly scalable manner.
 
@@ -34,7 +34,7 @@ To be used with a local map of tags.
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.4.0"
+  version = "2.4.1"
 
   admin_password  = "foo"
   bastion_sg_name = "bastion-sg"
@@ -61,7 +61,7 @@ Note: It is better to use a template file, but the template data sources below i
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.4.0"
+  version = "2.4.1"
 
   admin_password    = "foo"
   agent_max         = 6
@@ -96,7 +96,7 @@ module "jenkins_ha_agents" {
 
   executors              = "4"
   instance_type          = "t2.large"
-  jenkins_version        = "2.222.1"
+  jenkins_version        = "2.222.3"
   password_ssm_parameter = "/admin_password"
 
   cidr_ingress        = ["0.0.0.0/0"]
@@ -184,7 +184,7 @@ EOF
 | extra_master_userdata | Extra master user-data to add to the default built-in. Created from a template outside of the module. | string | `empty` | no |
 | extra_master_userdata_merge | Control how cloud-init merges custom master user-data sections. | string | `list(append)+dict(recurse_array)+str()` | no |
 | instance_type | The type of instance to use for both ASG's. | string | `t2.large` | no |
-| jenkins_version | The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group. | string | `2.222.1` | no |
+| jenkins_version | The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group. | string | `2.222.3` | no |
 | key_name | SSH Key to launch instances. | string | `null` | no |
 | match_agent_asg_lc_names | Should the agent ASG and LC names match? This will re-hydrate the ASG and instances for changes to LC. | bool | `true` |
 | match_master_asg_lc_names | Should the master ASG and LC names match? This will re-hydrate the ASG and instances for changes to LC. | bool | `true` |
@@ -290,6 +290,18 @@ Fargate cannot be used with the master node as it cannot currently mount EFS vol
 ### Why not use a plugin to create agents?
 
 The goal is to completely define the deployment with code. If a plugin is used and configured for agent deployment, defining the solution as code would be more challenging. With the SWARM plugin, and the current configuration, the infrastructure deploys instances, and the instance user data connects. The master is only used for scaling in and out based on executor load.
+
+## Possible Improvements
+
+Below are a list of possible improvements identified. Please feel free to develope and test. These may or may not be implemented.
+
+* Fargate agents instead of instances
+* Fargate master with EFS mount
+* Add instance protection to agents actively executing jobs
+* Add signaling to the master and agent bootstraping process
+* IAM policy document resources instead of plain json
+* Add the ability to include custom iam policy details from variable inputs
+* Move towards launch templates instead of launch configuration
 
 ## Authors
 
