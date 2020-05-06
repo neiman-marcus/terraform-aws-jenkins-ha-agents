@@ -103,10 +103,10 @@ module "jenkins_ha_agents" {
   private_subnet_name = "private-subnet-*"
   public_subnet_name  = "public-subnet-*"
 
-  r53_record      = "jenkins.foo.io"
-  region          = "us-west-2"
-  spot_price      = "0.0928"
-  ssl_certificate = "*.foo.io"
+  r53_record        = "jenkins.foo.io"
+  region            = "us-west-2"
+  custom_spot_price = "0.0928"
+  ssl_certificate   = "*.foo.io"
 
   ssm_parameter = "/jenkins/foo"
   swarm_version = "3.19"
@@ -175,6 +175,7 @@ EOF
 | bastion_sg_name | The bastion security group name to allow to ssh to the master/agents. | string | `N/A` | yes |
 | cidr_ingress | IP address cidr ranges allowed access to the LB. | string | `["0.0.0.0/0"]` | no |
 | custom_plugins | Custom plugins to install when bootstrapping. Created from a template outside of the module. | string | `empty` | no |
+| custom_spot_price | A custom spot price if not using a default instance type. | string | `N/A` | no |
 | domain_name | The root domain name used to lookup the route53 zone information. | string | `N/A` | yes |
 | efs_mode | The EFS throughput mode. Options are bursting and provisioned. To set the provisioned throughput in mibps, configure `efs_provisioned_throughput` variable. | string | `bursting` | no |
 | efs_provisioned_throughput | The EFS provisioned throughput in mibps. Ignored if EFS throughput mode is set to bursting. | int | `3` | no |

@@ -57,6 +57,11 @@ variable "custom_plugins" {
   description = "Custom plugins to install alongside the defaults. Pull from outside the module."
 }
 
+variable "custom_spot_price" {
+  default     = ""
+  description = "Custom spot price, not used for lookup."
+}
+
 variable "domain_name" {
   description = "The root domain name used to lookup the route53 zone information."
 }

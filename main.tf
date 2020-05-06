@@ -215,7 +215,7 @@ resource "aws_launch_configuration" "agent_lc" {
   image_id      = data.aws_ami.amzn2_ami.id
   instance_type = var.instance_type
 
-  spot_price = var.spot_price[var.instance_type]
+  spot_price = var.custom_spot_price != "" ? var.custom_spot_price : var.spot_price[var.instance_type]
 
   iam_instance_profile = aws_iam_instance_profile.agent_ip.name
   security_groups      = [aws_security_group.agent_sg.id]
