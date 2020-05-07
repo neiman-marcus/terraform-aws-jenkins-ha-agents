@@ -54,7 +54,13 @@ scale_down_number = -1
 
 scale_up_number = 1
 
-spot_price = "0.0928"
+spot_price = {
+  "t2.micro"  = "0.0116"
+  "t2.small"  = "0.023"
+  "t2.medium" = "0.0464"
+  "t2.large"  = "0.0928"
+  "t2.xlarge" = "0.1856"
+}
 
 ssl_certificate = "*.foo.io"
 
