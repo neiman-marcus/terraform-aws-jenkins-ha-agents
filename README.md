@@ -2,7 +2,7 @@
 
 # terraform-aws-jenkins-ha-agents
 
-![version](https://img.shields.io/badge/version-v2.4.1-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
+![version](https://img.shields.io/badge/version-v2.4.2-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
 
 A module for deploying Jenkins in a highly available and highly scalable manner.
 
@@ -34,7 +34,7 @@ To be used with a local map of tags.
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.4.1"
+  version = "2.4.2"
 
   admin_password  = "foo"
   bastion_sg_name = "bastion-sg"
@@ -61,7 +61,7 @@ Note: It is better to use a template file, but the template data sources below i
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.4.1"
+  version = "2.4.2"
 
   admin_password    = "foo"
   agent_max         = 6
@@ -105,8 +105,15 @@ module "jenkins_ha_agents" {
 
   r53_record      = "jenkins.foo.io"
   region          = "us-west-2"
-  spot_price      = "0.0928"
   ssl_certificate = "*.foo.io"
+
+  spot_price = {
+    "t2.micro"  = "0.0116"
+    "t2.small"  = "0.023"
+    "t2.medium" = "0.0464"
+    "t2.large"  = "0.0928"
+    "t2.xlarge" = "0.1856"
+  }
 
   ssm_parameter = "/jenkins/foo"
   swarm_version = "3.19"
