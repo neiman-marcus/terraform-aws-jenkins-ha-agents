@@ -22,7 +22,7 @@ Related blog post can be found on the [Neiman Marcus Medium page](https://medium
 
 Terraform 0.12. Pin module version to `~> v2.0`. Submit pull-requests to `master` branch.
 
-Terraform 0.11. Pin module version to `~> v1.0`. Submit pull-requests to `terraform11` branch.
+Terraform 0.11. Pin module version to `~> v1.0`. ~~Submit pull-requests to `terraform11` branch.~~ Terraform 0.11 support is deprecated in this module.
 
 
 ## Usage
@@ -81,7 +81,6 @@ module "jenkins_ha_agents" {
   bastion_sg_name = "bastion-sg"
   domain_name     = "foo.io."
   
-  match_agent_asg_lc_names  = true
   match_master_asg_lc_names = true
 
   key_name          = "foo"
@@ -95,7 +94,7 @@ module "jenkins_ha_agents" {
   extra_master_userdata_merge = "list(append)+dict(recurse_array)+str()"
 
   executors              = "4"
-  instance_type          = "t2.large"
+  instance_type          = ["t3a.xlarge", "t3.xlarge", "t2.xlarge"]
   jenkins_version        = "2.222.3"
   password_ssm_parameter = "/admin_password"
 
@@ -106,14 +105,6 @@ module "jenkins_ha_agents" {
   r53_record      = "jenkins.foo.io"
   region          = "us-west-2"
   ssl_certificate = "*.foo.io"
-
-  spot_price = {
-    "t2.micro"  = "0.0116"
-    "t2.small"  = "0.023"
-    "t2.medium" = "0.0464"
-    "t2.large"  = "0.0928"
-    "t2.xlarge" = "0.1856"
-  }
 
   ssm_parameter = "/jenkins/foo"
   swarm_version = "3.19"
@@ -190,10 +181,9 @@ EOF
 | extra_agent_userdata_merge | Control how cloud-init merges custom agent user-data sections. | string | `list(append)+dict(recurse_array)+str()` | no |
 | extra_master_userdata | Extra master user-data to add to the default built-in. Created from a template outside of the module. | string | `empty` | no |
 | extra_master_userdata_merge | Control how cloud-init merges custom master user-data sections. | string | `list(append)+dict(recurse_array)+str()` | no |
-| instance_type | The type of instance to use for both ASG's. | string | `t2.large` | no |
+| instance_type | The type of instances to use for both ASG's. The first value in the list will be set as the master instance. | list | `t3a.xlarge, t3.xlarge, t2.xlarge` | no |
 | jenkins_version | The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group. | string | `2.222.3` | no |
 | key_name | SSH Key to launch instances. | string | `null` | no |
-| match_agent_asg_lc_names | Should the agent ASG and LC names match? This will re-hydrate the ASG and instances for changes to LC. | bool | `true` |
 | match_master_asg_lc_names | Should the master ASG and LC names match? This will re-hydrate the ASG and instances for changes to LC. | bool | `true` |
 | password_ssm_parameter | The path value of the master admin passowrd, stored in ssm parameter store. | string | `/admin_password` | no |
 | private_subnet_name | The name prefix of the private subnets to pull in as a data source. | string | `N/A` | yes |
@@ -202,7 +192,6 @@ EOF
 | region | The AWS region to deploy the infrastructure too. | string | `N/A` | yes |
 | scale_down_number | Number of agents to destroy when scaling down. | int | `-1` | no |
 | scale_up_number | Number of agents to create when scaling up. | int | `1` | no |
-| spot_price | The spot price map for each instance type. | map | `t2.micro=0.0116, t2.large=0.0928, t2.xlarge=0.1856` | no |
 | ssl_certificate | The name of the SSL certificate to use on the load balancer. | string | `N/A` | yes |
 | ssm_parameter | The full ssm parameter path that will house the api key and master admin password. Also used to grant IAM access to this resource. | string | `N/A` | yes |
 | swarm_version | The version of swarm plugin to install on the agents. Update by updating this value. | int | `3.19` | no |
@@ -236,13 +225,21 @@ N/A
 
 ## Breaking Changes
 
+### v2.5.0 (upcoming)
+
+* Giving custom names to ASG's has been removed. This should only impact external resources created outside of the module.
+* ASG's no longer rehydrate with launch template/configuration revisions. You will need to manaully rehydrate your ASG's with new instances.
+* Spot pricing variable has been removed as the agent ASG was moved to launch template, and does not require this parameter (defaults to on-demand max price).
+* Instance type variable has been changed to a list to accomodate multiple launch template overrides.
+
+
 ### v2.1.0
 
- * This version of the module pulls all public and private subnets using a wildcard.
-   * This allows for more than two hardcoded subnets.
-   * You may have to destroy several resources and create them again, including mount targets.
-   * As long as you do not delete your EFS volume, there should be no data loss.
- * Cidr blocks have been consolidated to reduce redundant configuration.
+* This version of the module pulls all public and private subnets using a wildcard.
+  * This allows for more than two hardcoded subnets.
+  * You may have to destroy several resources and create them again, including mount targets.
+  * As long as you do not delete your EFS volume, there should be no data loss.
+* Cidr blocks have been consolidated to reduce redundant configuration.
 
 ## How it works
 
