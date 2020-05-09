@@ -83,7 +83,7 @@ variable "executors" {
 
 variable "instance_type" {
   description = "The type of instances to use for both ASG's. The first value in the list will be set as the master instance."
-  default     = ["t2.xlarge", "t3a.xlarge", "t3.xlarge"]
+  default     = ["t3a.xlarge", "t3.xlarge", "t2.xlarge"]
 }
 
 variable "jenkins_version" {

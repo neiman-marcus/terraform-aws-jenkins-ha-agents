@@ -30,7 +30,7 @@ environment = "prod"
 
 executors = 4
 
-instance_type = ["t2.xlarge", "t3a.xlarge", "t3.xlarge"]
+instance_type = ["t3a.xlarge", "t3.xlarge", "t2.xlarge"]
 
 jenkins_version = "2.222.3"
 
