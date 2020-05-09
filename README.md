@@ -294,11 +294,12 @@ Below are a list of possible improvements identified. Please feel free to develo
 
 * Fargate agents instead of instances
 * Fargate master with EFS mount
+* EFS mount helper
 * Add instance protection to agents actively executing jobs
 * Add signaling to the master and agent bootstraping process
 * IAM policy document resources instead of plain json
-* Add the ability to include custom iam policy details from variable inputs
-* Move towards launch templates instead of launch configuration
+* ~~Add the ability to include custom iam policy details from variable inputs~~ / Added in v2.5.0
+* ~~Move towards launch templates instead of launch configuration~~ / Added in v2.5.0
 
 ## Authors
 
