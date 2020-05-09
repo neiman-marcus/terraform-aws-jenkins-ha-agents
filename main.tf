@@ -66,8 +66,8 @@ data "aws_route53_zone" "r53_zone" {
   name = var.domain_name
 }
 
-data "aws_iam_policy" "amazon_ec2_role_for_ssm" {
-  arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+data "aws_iam_policy" "ssm_policy" {
+  arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_lb" "lb" {
@@ -386,7 +386,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "agent_policy_attachment" {
   role       = aws_iam_role.agent_iam_role.name
-  policy_arn = data.aws_iam_policy.amazon_ec2_role_for_ssm.arn
+  policy_arn = data.aws_iam_policy.ssm_policy.arn
 }
 
 resource "aws_cloudwatch_log_group" "agent_logs" {
@@ -679,7 +679,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "master_policy_attachment" {
   role       = aws_iam_role.master_iam_role.name
-  policy_arn = data.aws_iam_policy.amazon_ec2_role_for_ssm.arn
+  policy_arn = data.aws_iam_policy.ssm_policy.arn
 }
 
 resource "aws_cloudwatch_log_group" "master_logs" {
