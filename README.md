@@ -227,7 +227,7 @@ N/A
 * Giving custom names to ASG's has been removed. This should only impact external resources created outside of the module.
 * ASG's no longer rehydrate with launch template/configuration revisions. You will need to manaully rehydrate your ASG's with new instances.
 * Spot pricing variable has been removed as the agent ASG was moved to launch template, and does not require this parameter (defaults to on-demand max price).
-* Instance type variable has been changed to a list to accomodate multiple launch template overrides.
+* Instance type variable has been changed to a list to accomodate multiple launch template overrides. If you use a non-default value, you will have to change your variable to a list.
 
 
 ### v2.1.0
