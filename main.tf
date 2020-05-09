@@ -64,19 +64,14 @@ data "aws_iam_policy" "amazon_ec2_role_for_ssm" {
 }
 
 resource "aws_lb" "lb" {
+  name                       = "${var.application}-lb"
   idle_timeout               = 60
   internal                   = false
-  name                       = "${var.application}-lb"
   security_groups            = [aws_security_group.lb_sg.id]
   subnets                    = data.aws_subnet_ids.public.ids
   enable_deletion_protection = false
 
-  tags = merge(
-    var.tags,
-    {
-      "Name" = "${var.application}-lb"
-    },
-  )
+  tags = merge(var.tags, { Name = "${var.application}-lb" })
 }
 
 resource "aws_security_group" "lb_sg" {
@@ -105,12 +100,7 @@ resource "aws_security_group" "lb_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge(
-    var.tags,
-    {
-      "Name" = "${var.application}-lb-sg"
-    },
-  )
+  tags = merge(var.tags, { Name = "${var.application}-lb-sg" })
 }
 
 resource "aws_route53_record" "r53_record" {
@@ -257,12 +247,7 @@ resource "aws_security_group" "agent_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge(
-    var.tags,
-    {
-      "Name" = "${var.application}-agent-sg"
-    },
-  )
+  tags = merge(var.tags, { Name = "${var.application}-agent-sg" })
 }
 
 resource "aws_iam_instance_profile" "agent_ip" {
@@ -290,13 +275,7 @@ resource "aws_iam_role" "agent_iam_role" {
 }
 EOF
 
-
-  tags = merge(
-    var.tags,
-    {
-      "Name" = "${var.application}-agent-iam-role"
-    },
-  )
+  tags = merge(var.tags, { Name = "${var.application}-agent-iam-role" })
 }
 
 resource "aws_iam_role_policy" "agent_inline_policy" {
@@ -354,7 +333,6 @@ resource "aws_iam_role_policy" "agent_inline_policy" {
   ]
 }
 EOF
-
 }
 
 resource "aws_iam_role_policy_attachment" "agent_policy_attachment" {
@@ -364,13 +342,7 @@ resource "aws_iam_role_policy_attachment" "agent_policy_attachment" {
 
 resource "aws_cloudwatch_log_group" "agent_logs" {
   name = "${var.application}-agent-logs"
-
-  tags = merge(
-    var.tags,
-    {
-      "Name" = "${var.application}-agent-logs"
-    },
-  )
+  tags = merge(var.tags, { Name = "${var.application}-agent-logs" })
 }
 
 data "template_cloudinit_config" "agent_init" {
@@ -536,12 +508,7 @@ resource "aws_security_group" "master_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge(
-    var.tags,
-    {
-      "Name" = "${var.application}-master-sg"
-    },
-  )
+  tags = merge(var.tags, { Name = "${var.application}-master-sg" })
 }
 
 resource "aws_iam_instance_profile" "master_ip" {
@@ -569,13 +536,7 @@ resource "aws_iam_role" "master_iam_role" {
 }
 EOF
 
-
-  tags = merge(
-    var.tags,
-    {
-      "Name" = "${var.application}-master-iam-role"
-    },
-  )
+  tags = merge(var.tags, { Name = "${var.application}-master-iam-role" })
 }
 
 resource "aws_iam_role_policy" "master_inline_policy" {
@@ -628,7 +589,6 @@ resource "aws_iam_role_policy" "master_inline_policy" {
   ]
 }
 EOF
-
 }
 
 resource "aws_iam_role_policy_attachment" "master_policy_attachment" {
@@ -638,13 +598,7 @@ resource "aws_iam_role_policy_attachment" "master_policy_attachment" {
 
 resource "aws_cloudwatch_log_group" "master_logs" {
   name = "${var.application}-master-logs"
-
-  tags = merge(
-    var.tags,
-    {
-      "Name" = "${var.application}-master-logs"
-    },
-  )
+  tags = merge(var.tags, { Name = "${var.application}-master-logs" })
 }
 
 data "template_cloudinit_config" "master_init" {
@@ -718,12 +672,7 @@ resource "aws_efs_file_system" "master_efs" {
   throughput_mode                 = var.efs_mode
   provisioned_throughput_in_mibps = var.efs_mode == "provisioned" ? var.efs_provisioned_throughput : null
 
-  tags = merge(
-    var.tags,
-    {
-      "Name" = "${var.application}-master-efs"
-    },
-  )
+  tags = merge(var.tags, { Name = "${var.application}-master-efs" })
 }
 
 resource "aws_efs_mount_target" "mount_targets" {
@@ -754,12 +703,7 @@ resource "aws_security_group" "master_storage_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge(
-    var.tags,
-    {
-      "Name" = "${var.application}-master-storage-sg"
-    },
-  )
+  tags = merge(var.tags, { Name = "${var.application}-master-storage-sg" })
 }
 
 resource "aws_lb_target_group" "master_tg" {
@@ -779,12 +723,7 @@ resource "aws_lb_target_group" "master_tg" {
     matcher             = "200-299"
   }
 
-  tags = merge(
-    var.tags,
-    {
-      "Name" = "${var.application}-master-tg"
-    },
-  )
+  tags = merge(var.tags, { Name = "${var.application}-master-tg" })
 }
 
 resource "aws_lb_listener" "master_lb_listener" {

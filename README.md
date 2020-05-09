@@ -213,15 +213,11 @@ EOF
 
 | Name | Description |
 |------|-------------|
-| agent_iam_role | The agent IAM role attributes. |
-| lb_arn_suffix | The ARN suffix of the load balancer. |
-| lb_dns_name | The DNS name of the load balancer. |
-| lb_id | The ID/ARN of the load balancer. |
-| lb_zone_id | The canonical hosted zone ID of the load balancer. |
-| master_iam_role | The master IAM role attributes |
-| r53_record_name | The name of the route 53 record. |
+| agent_asg_name | The name of the agent asg. Use for adding to addition outside resources. |
+| agent_iam_role | The agent IAM role attributes. Use for attaching additional iam policies. |
+| master_asg_name | The name of the master asg. Use for adding to addition outside resources. |
+| master_iam_role | The master IAM role name. Use for attaching additional iam policies. |
 | r53_record_fqdn | The fqdn of the route 53 record. |
-| r53_zone_id | The route 53 zone id. |
 
 ## Known Issues/Limitations
 

@@ -1,7 +1,7 @@
 # Local .terraform directories
-**/.terraform/*
+.terraform
 
-**/.vscode/*
+.vscode
 
 # .tfstate files
 *.tfstate
@@ -37,3 +37,4 @@ override.tf.json
 
 # Misc
 TODO
+.local
