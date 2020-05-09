@@ -9,7 +9,8 @@ terraform {
 
 locals {
   tags = {
-    agent = merge(var.tags, { Name = "${var.application}-agent" }),
+    agent  = merge(var.tags, { Name = "${var.application}-agent" }),
+    master = merge(var.tags, { Name = "${var.application}-master" })
   }
 }
 
@@ -464,9 +465,7 @@ resource "aws_autoscaling_policy" "agent_scale_down_policy" {
 }
 
 resource "aws_autoscaling_group" "master_asg" {
-  depends_on = [
-    aws_efs_mount_target.mount_targets
-  ]
+  depends_on = [aws_efs_mount_target.mount_targets]
 
   max_size = 1
   min_size = 1
@@ -474,50 +473,89 @@ resource "aws_autoscaling_group" "master_asg" {
   health_check_grace_period = 1200
   health_check_type         = "ELB"
 
-  launch_configuration = aws_launch_configuration.master_lc.name
-  name                 = var.match_master_asg_lc_names ? aws_launch_configuration.master_lc.name : null
-  name_prefix          = var.match_master_asg_lc_names ? null : "${var.application}-master-"
+  name = "${var.application}-master-asg"
 
   vpc_zone_identifier = data.aws_subnet_ids.private.ids
 
   target_group_arns = [aws_lb_target_group.master_tg.arn]
 
-  tag {
-    key                 = "Name"
-    value               = "${var.application}-master"
-    propagate_at_launch = true
+  mixed_instances_policy {
+
+    instances_distribution {
+      on_demand_percentage_above_base_capacity = 100
+    }
+
+    launch_template {
+      launch_template_specification {
+        launch_template_id = aws_launch_template.master_lt.id
+        version            = "$Latest"
+      }
+
+      override {
+        instance_type = var.instance_type[0]
+      }
+
+    }
   }
 
-  tag {
-    key                 = "Launch Configuration"
-    value               = aws_launch_configuration.master_lc.name
-    propagate_at_launch = true
+  dynamic "tag" {
+    for_each = local.tags.master
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
   }
 }
 
-resource "aws_launch_configuration" "master_lc" {
-  name_prefix   = "${var.application}-master-"
+resource "aws_launch_template" "master_lt" {
+  name        = "${var.application}-master-lt"
+  description = "${var.application} master launch template"
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.master_ip.name
+  }
+
+  credit_specification {
+    cpu_credits = "standard"
+  }
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+    no_device   = true
+
+    ebs {
+      volume_size           = 25
+      encrypted             = true
+      delete_on_termination = true
+      volume_type           = "gp2"
+    }
+  }
+
   image_id      = data.aws_ami.amzn2_ami.id
+  key_name      = var.key_name
+  ebs_optimized = false
+
   instance_type = var.instance_type[0]
+  user_data     = data.template_cloudinit_config.master_init.rendered
 
-  iam_instance_profile = aws_iam_instance_profile.master_ip.name
-  security_groups      = [aws_security_group.master_sg.id]
-
-  user_data_base64 = data.template_cloudinit_config.master_init.rendered
-  key_name         = var.key_name
-
-  enable_monitoring = true
-  ebs_optimized     = false
-
-  root_block_device {
-    volume_type           = "gp2"
-    volume_size           = 25
-    delete_on_termination = true
+  monitoring {
+    enabled = true
   }
 
-  lifecycle {
-    create_before_destroy = true
+  vpc_security_group_ids = [aws_security_group.master_sg.id]
+
+  tag_specifications {
+    resource_type = "instance"
+    tags          = local.tags.master
   }
+
+  tag_specifications {
+    resource_type = "volume"
+    tags          = local.tags.master
+  }
+
+  tags = merge(var.tags, { Name = "${var.application}-master-lt" })
 }
 
 resource "aws_security_group" "master_sg" {
