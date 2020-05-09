@@ -38,7 +38,6 @@ module "jenkins_ha_agents" {
   bastion_sg_name = var.bastion_sg_name
   domain_name     = var.domain_name
 
-  match_agent_asg_lc_names  = var.match_agent_asg_lc_names
   match_master_asg_lc_names = var.match_master_asg_lc_names
 
   key_name          = var.key_name
@@ -64,7 +63,6 @@ module "jenkins_ha_agents" {
 
   r53_record      = var.r53_record
   region          = var.region
-  spot_price      = var.spot_price
   ssl_certificate = var.ssl_certificate
 
   ssm_parameter = var.ssm_parameter

@@ -82,8 +82,8 @@ variable "executors" {
 }
 
 variable "instance_type" {
-  description = "The type of instance to use for both ASG's."
-  default     = "t2.large"
+  description = "The type of instances to use for both ASG's. The first value in the list will be set as the master instance."
+  default     = ["t2.xlarge", "t3a.xlarge", "t3.xlarge"]
 }
 
 variable "jenkins_version" {
@@ -94,11 +94,6 @@ variable "jenkins_version" {
 variable "key_name" {
   default     = null
   description = "SSH Key to launch instances."
-}
-
-variable "match_agent_asg_lc_names" {
-  default     = true
-  description = "Should the agent ASG and LC names match? This will re-hydrate the ASG and instances for changes to LC."
 }
 
 variable "match_master_asg_lc_names" {
@@ -135,17 +130,6 @@ variable "scale_down_number" {
 variable "scale_up_number" {
   default     = 1
   description = "Number of agents to create when scaling up."
-}
-
-variable "spot_price" {
-  description = "The spot price map for each instance type."
-  type        = map(string)
-
-  default = {
-    "t2.micro"  = "0.0116"
-    "t2.large"  = "0.0928"
-    "t2.xlarge" = "0.1856"
-  }
 }
 
 variable "ssl_certificate" {

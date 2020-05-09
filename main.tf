@@ -7,6 +7,12 @@ terraform {
   }
 }
 
+locals {
+  tags = {
+    agent = merge(var.tags, { Name = "${var.application}-agent" }),
+  }
+}
+
 data "aws_caller_identity" "current" {}
 
 data "aws_security_group" "bastion_sg" {
@@ -181,50 +187,92 @@ resource "aws_autoscaling_group" "agent_asg" {
   health_check_grace_period = 300
   health_check_type         = "EC2"
 
-  launch_configuration = aws_launch_configuration.agent_lc.name
-  name                 = var.match_agent_asg_lc_names ? aws_launch_configuration.agent_lc.name : null
-  name_prefix          = var.match_agent_asg_lc_names ? null : "${var.application}-agent-"
+  name = "${var.application}-agent-asg"
 
   vpc_zone_identifier = data.aws_subnet_ids.private.ids
 
-  tag {
-    key                 = "Name"
-    value               = "${var.application}-agent"
-    propagate_at_launch = true
+  mixed_instances_policy {
+
+    instances_distribution {
+      on_demand_base_capacity                  = 0
+      on_demand_percentage_above_base_capacity = 0
+      spot_instance_pools                      = length(var.instance_type)
+    }
+
+    launch_template {
+      launch_template_specification {
+        launch_template_id = aws_launch_template.agent_lt.id
+        version            = "$Latest"
+      }
+
+      dynamic "override" {
+        for_each = var.instance_type
+        content {
+          instance_type = override.value
+        }
+      }
+
+    }
   }
 
-  tag {
-    key                 = "Launch Configuration"
-    value               = aws_launch_configuration.agent_lc.name
-    propagate_at_launch = true
+  dynamic "tag" {
+    for_each = local.tags.agent
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
   }
 }
 
-resource "aws_launch_configuration" "agent_lc" {
-  name_prefix   = "${var.application}-agent-"
+resource "aws_launch_template" "agent_lt" {
+  name        = "${var.application}-agent-lt"
+  description = "${var.application} agent launch template"
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.agent_ip.name
+  }
+
+  credit_specification {
+    cpu_credits = "standard"
+  }
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+    no_device   = true
+
+    ebs {
+      volume_size           = 20
+      encrypted             = true
+      delete_on_termination = true
+      volume_type           = "gp2"
+    }
+  }
+
   image_id      = data.aws_ami.amzn2_ami.id
-  instance_type = var.instance_type
+  key_name      = var.key_name
+  ebs_optimized = false
 
-  spot_price = var.spot_price[var.instance_type]
+  instance_type = var.instance_type[0]
+  user_data     = data.template_cloudinit_config.agent_init.rendered
 
-  iam_instance_profile = aws_iam_instance_profile.agent_ip.name
-  security_groups      = [aws_security_group.agent_sg.id]
-
-  user_data_base64 = data.template_cloudinit_config.agent_init.rendered
-  key_name         = var.key_name
-
-  enable_monitoring = true
-  ebs_optimized     = false
-
-  root_block_device {
-    volume_type           = "gp2"
-    volume_size           = var.agent_volume_size
-    delete_on_termination = true
+  monitoring {
+    enabled = true
   }
 
-  lifecycle {
-    create_before_destroy = true
+  vpc_security_group_ids = [aws_security_group.agent_sg.id]
+
+  tag_specifications {
+    resource_type = "instance"
+    tags          = local.tags.agent
   }
+
+  tag_specifications {
+    resource_type = "volume"
+    tags          = local.tags.agent
+  }
+
+  tags = merge(var.tags, { Name = "${var.application}-agent-lt" })
 }
 
 resource "aws_security_group" "agent_sg" {
@@ -450,7 +498,7 @@ resource "aws_autoscaling_group" "master_asg" {
 resource "aws_launch_configuration" "master_lc" {
   name_prefix   = "${var.application}-master-"
   image_id      = data.aws_ami.amzn2_ami.id
-  instance_type = var.instance_type
+  instance_type = var.instance_type[0]
 
   iam_instance_profile = aws_iam_instance_profile.master_ip.name
   security_groups      = [aws_security_group.master_sg.id]

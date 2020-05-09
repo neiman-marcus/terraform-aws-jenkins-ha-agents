@@ -30,13 +30,11 @@ environment = "prod"
 
 executors = 4
 
-instance_type = "t2.large"
+instance_type = ["t2.xlarge", "t3a.xlarge", "t3.xlarge"]
 
 jenkins_version = "2.222.3"
 
 key_name = "foo"
-
-match_agent_asg_lc_names = true
 
 match_master_asg_lc_names = true
 
@@ -53,14 +51,6 @@ region = "us-east-1"
 scale_down_number = -1
 
 scale_up_number = 1
-
-spot_price = {
-  "t2.micro"  = "0.0116"
-  "t2.small"  = "0.023"
-  "t2.medium" = "0.0464"
-  "t2.large"  = "0.0928"
-  "t2.xlarge" = "0.1856"
-}
 
 ssl_certificate = "*.foo.io"
 
