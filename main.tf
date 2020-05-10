@@ -203,7 +203,7 @@ resource "aws_autoscaling_group" "agent_asg" {
     launch_template {
       launch_template_specification {
         launch_template_id = aws_launch_template.agent_lt.id
-        version            = "$Latest"
+        version            = var.agent_lt_version
       }
 
       dynamic "override" {
@@ -488,7 +488,7 @@ resource "aws_autoscaling_group" "master_asg" {
     launch_template {
       launch_template_specification {
         launch_template_id = aws_launch_template.master_lt.id
-        version            = "$Latest"
+        version            = var.master_lt_version
       }
 
       override {

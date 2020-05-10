@@ -81,6 +81,9 @@ module "jenkins_ha_agents" {
   bastion_sg_name = "bastion-sg"
   domain_name     = "foo.io."
 
+  agent_lt_version  = "$Latest"
+  master_lt_version = "$Latest"
+
   key_name          = "foo"
   scale_down_number = -1
   scale_up_number   = 1
@@ -160,6 +163,7 @@ EOF
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
 | admin_password | The master admin password. Used to bootstrap and login to the master. Also pushed to ssm parameter store for posterity. | string | `N/A` | yes |
+| agent_lt_version | The version of the agent launch template to use. Only use if you need to programatically select an older version of the launch template. Not recommended to change. | string | `$Latest` | no |
 | agent_max | The maximum number of agents to run in the agent ASG. | int | `6` | no |
 | agent_min | The minimum number of agents to run in the agent ASG. | int | `2` | no |
 | agent_volume_size | The size of the agent volume. | int | `16` | no |
@@ -182,6 +186,7 @@ EOF
 | instance_type | The type of instances to use for both ASG's. The first value in the list will be set as the master instance. | list | `t3a.xlarge, t3.xlarge, t2.xlarge` | no |
 | jenkins_version | The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group. | string | `2.222.3` | no |
 | key_name | SSH Key to launch instances. | string | `null` | no |
+| master_lt_version | The version of the master launch template to use. Only use if you need to programatically select an older version of the launch template. Not recommended to change. | string | `$Latest` | no |
 | password_ssm_parameter | The path value of the master admin passowrd, stored in ssm parameter store. | string | `/admin_password` | no |
 | private_subnet_name | The name prefix of the private subnets to pull in as a data source. | string | `N/A` | yes |
 | public_subnet_name | The name prefix of the public subnets to pull in as a data source. | string | `N/A` | yes |
@@ -228,7 +233,6 @@ N/A
 * ASG's no longer rehydrate with launch template/configuration revisions. You will need to manaully rehydrate your ASG's with new instances.
 * Spot pricing variable has been removed as the agent ASG was moved to launch template, and does not require this parameter (defaults to on-demand max price).
 * Instance type variable has been changed to a list to accomodate multiple launch template overrides. If you use a non-default value, you will have to change your variable to a list.
-
 
 ### v2.1.0
 
