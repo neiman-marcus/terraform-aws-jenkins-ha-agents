@@ -111,11 +111,6 @@ variable "key_name" {
   description = "SSH Key to launch instances."
 }
 
-variable "match_master_asg_lc_names" {
-  default     = true
-  description = "Should the master ASG and LC names match? This will re-hydrate the ASG and instances for changes to LC."
-}
-
 variable "password_ssm_parameter" {
   description = "The path value of the master admin passowrd, stored in ssm parameter store."
   default     = "/admin_password"

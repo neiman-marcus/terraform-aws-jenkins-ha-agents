@@ -36,8 +36,6 @@ jenkins_version = "2.222.3"
 
 key_name = "foo"
 
-match_master_asg_lc_names = true
-
 password_ssm_parameter = "/admin_password"
 
 private_subnet_name = "private-subnet-*"

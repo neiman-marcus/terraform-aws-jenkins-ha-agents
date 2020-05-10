@@ -80,8 +80,6 @@ module "jenkins_ha_agents" {
   application     = "jenkins"
   bastion_sg_name = "bastion-sg"
   domain_name     = "foo.io."
-  
-  match_master_asg_lc_names = true
 
   key_name          = "foo"
   scale_down_number = -1
@@ -184,7 +182,6 @@ EOF
 | instance_type | The type of instances to use for both ASG's. The first value in the list will be set as the master instance. | list | `t3a.xlarge, t3.xlarge, t2.xlarge` | no |
 | jenkins_version | The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group. | string | `2.222.3` | no |
 | key_name | SSH Key to launch instances. | string | `null` | no |
-| match_master_asg_lc_names | Should the master ASG and LC names match? This will re-hydrate the ASG and instances for changes to LC. | bool | `true` |
 | password_ssm_parameter | The path value of the master admin passowrd, stored in ssm parameter store. | string | `/admin_password` | no |
 | private_subnet_name | The name prefix of the private subnets to pull in as a data source. | string | `N/A` | yes |
 | public_subnet_name | The name prefix of the public subnets to pull in as a data source. | string | `N/A` | yes |
