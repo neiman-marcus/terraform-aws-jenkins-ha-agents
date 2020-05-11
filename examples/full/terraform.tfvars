@@ -1,5 +1,7 @@
 agent_max = 6
 
+agent_lt_version = "$Latest"
+
 agent_minx = 2
 
 agent_volume_size = 16
@@ -30,11 +32,13 @@ environment = "prod"
 
 executors = 4
 
-instance_type = ["t2.xlarge", "t3a.xlarge", "t3.xlarge"]
+instance_type = ["t3a.xlarge", "t3.xlarge", "t2.xlarge"]
 
 jenkins_version = "2.222.3"
 
 key_name = "foo"
+
+master_lt_version = "$Latest"
 
 password_ssm_parameter = "/admin_password"
 

@@ -66,8 +66,8 @@ data "aws_route53_zone" "r53_zone" {
   name = var.domain_name
 }
 
-data "aws_iam_policy" "amazon_ec2_role_for_ssm" {
-  arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+data "aws_iam_policy" "ssm_policy" {
+  arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_lb" "lb" {
@@ -203,7 +203,7 @@ resource "aws_autoscaling_group" "agent_asg" {
     launch_template {
       launch_template_specification {
         launch_template_id = aws_launch_template.agent_lt.id
-        version            = "$Latest"
+        version            = var.agent_lt_version
       }
 
       dynamic "override" {
@@ -386,7 +386,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "agent_policy_attachment" {
   role       = aws_iam_role.agent_iam_role.name
-  policy_arn = data.aws_iam_policy.amazon_ec2_role_for_ssm.arn
+  policy_arn = data.aws_iam_policy.ssm_policy.arn
 }
 
 resource "aws_cloudwatch_log_group" "agent_logs" {
@@ -488,7 +488,7 @@ resource "aws_autoscaling_group" "master_asg" {
     launch_template {
       launch_template_specification {
         launch_template_id = aws_launch_template.master_lt.id
-        version            = "$Latest"
+        version            = var.master_lt_version
       }
 
       override {
@@ -679,7 +679,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "master_policy_attachment" {
   role       = aws_iam_role.master_iam_role.name
-  policy_arn = data.aws_iam_policy.amazon_ec2_role_for_ssm.arn
+  policy_arn = data.aws_iam_policy.ssm_policy.arn
 }
 
 resource "aws_cloudwatch_log_group" "master_logs" {
