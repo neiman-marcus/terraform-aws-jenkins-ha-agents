@@ -4,6 +4,8 @@ on:
   pull_request:
     branches:
       - master
+env:
+  AWS_DEFAULT_REGION: us-east-1
 
 jobs:
   tf-lint:
