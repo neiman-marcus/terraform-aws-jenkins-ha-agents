@@ -1,0 +1,31 @@
+name: tf-lint
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  tf-lint:
+    name: tf-lint
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: setup
+        uses: hashicorp/setup-terraform@v1
+
+      - name: init
+        run: terraform init
+
+      - name: validate
+        run: terraform validate
+        
+      - name: fmt
+        run: terraform fmt -check
