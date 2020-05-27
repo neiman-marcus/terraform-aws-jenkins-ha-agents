@@ -2,7 +2,7 @@
 
 # terraform-aws-jenkins-ha-agents
 
-![version](https://img.shields.io/badge/version-v2.5.0-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
+![version](https://img.shields.io/badge/version-v2.5.1-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
 
 A module for deploying Jenkins in a highly available and highly scalable manner.
 
@@ -34,7 +34,7 @@ To be used with a local map of tags.
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.5.0"
+  version = "2.5.1"
 
   admin_password  = "foo"
   bastion_sg_name = "bastion-sg"
@@ -56,12 +56,12 @@ module "jenkins_ha_agents" {
 
 ### Full Configuration with Custom Userdata and Plugins
 
-Note: It is better to use a template file, but the template data sources below illistrate the point.
+#### main.tf
 
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.5.0"
+  version = "2.5.1"
 
   admin_password    = "foo"
   agent_max         = 6
@@ -114,7 +114,29 @@ module "jenkins_ha_agents" {
 }
 
 data "template_file" "custom_plugins" {
-  template = <<EOF
+  template = file("init/custom_plugins.cfg")
+}
+
+data "template_file" "extra_agent_userdata" {
+  template = file("init/extra_agent_userdata.cfg")
+  
+  vars {
+    foo = "bar"
+  }
+}
+
+data "template_file" "extra_master_userdata" {
+  template = file("init/extra_master_userdata.cfg")
+  
+  vars {
+    foo = "bar"
+  }
+}
+```
+
+#### init/custom_plugins.cfg
+
+```YAML
 ---
 #cloud-config
 
@@ -125,32 +147,22 @@ write_files:
     permissions: "000400"
     owner: root
     group: root
-EOF
-}
+```
 
-data "template_file" "extra_agent_userdata" {
-  vars {
-    foo = "bar"
-  }
+#### init/extra_agent_userdata.cfg
 
-  template = <<EOF
+```YAML
 ---
 runcmd:
   - echo 'foo = ${foo}'
-EOF
-}
+```
 
-data "template_file" "extra_master_userdata" {
-  vars {
-    foo = "bar"
-  }
-  
-  template = <<EOF
+#### init/extra_master_userdata.cfg
+
+```YAML
 ---
 runcmd:
   - echo 'foo = ${foo}'
-EOF
-}
 ```
 
 ## Examples
@@ -227,7 +239,7 @@ N/A
 
 ## Breaking Changes
 
-### v2.5.0 (upcoming)
+### v2.5.0
 
 * Giving custom names to ASG's has been removed. This should only impact external resources created outside of the module.
 * ASG's no longer rehydrate with launch template/configuration revisions. You will need to manaully rehydrate your ASG's with new instances.
