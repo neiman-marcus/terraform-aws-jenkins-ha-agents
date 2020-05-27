@@ -56,7 +56,7 @@ module "jenkins_ha_agents" {
 
 ### Full Configuration with Custom Userdata and Plugins
 
-Note: It is better to use a template file, but the template data sources below illistrate the point.
+#### main.tf
 
 ```TERRAFORM
 module "jenkins_ha_agents" {
@@ -114,7 +114,29 @@ module "jenkins_ha_agents" {
 }
 
 data "template_file" "custom_plugins" {
-  template = <<EOF
+  template = file("init/custom_plugins.cfg")
+}
+
+data "template_file" "extra_agent_userdata" {
+  template = file("init/extra_agent_userdata.cfg")
+  
+  vars {
+    foo = "bar"
+  }
+}
+
+data "template_file" "extra_master_userdata" {
+  template = file("init/extra_master_userdata.cfg")
+  
+  vars {
+    foo = "bar"
+  }
+}
+```
+
+#### init/custom_plugins.cfg
+
+```YAML
 ---
 #cloud-config
 
@@ -125,32 +147,22 @@ write_files:
     permissions: "000400"
     owner: root
     group: root
-EOF
-}
+```
 
-data "template_file" "extra_agent_userdata" {
-  vars {
-    foo = "bar"
-  }
+#### init/extra_agent_userdata.cfg
 
-  template = <<EOF
+```YAML
 ---
 runcmd:
   - echo 'foo = ${foo}'
-EOF
-}
+```
 
-data "template_file" "extra_master_userdata" {
-  vars {
-    foo = "bar"
-  }
-  
-  template = <<EOF
+#### init/extra_master_userdata.cfg
+
+```YAML
 ---
 runcmd:
   - echo 'foo = ${foo}'
-EOF
-}
 ```
 
 ## Examples
