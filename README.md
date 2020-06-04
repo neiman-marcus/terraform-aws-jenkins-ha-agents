@@ -110,7 +110,7 @@ module "jenkins_ha_agents" {
   ssl_certificate = "*.foo.io"
 
   ssm_parameter = "/jenkins/foo"
-  swarm_version = "3.20"
+  swarm_version = "3.21"
   tags          = local.tags
   vpc_name      = "prod-vpc"
 }
@@ -211,7 +211,7 @@ runcmd:
 | scale_up_number | Number of agents to create when scaling up. | int | `1` | no |
 | ssl_certificate | The name of the SSL certificate to use on the load balancer. | string | `N/A` | yes |
 | ssm_parameter | The full ssm parameter path that will house the api key and master admin password. Also used to grant IAM access to this resource. | string | `N/A` | yes |
-| swarm_version | The version of swarm plugin to install on the agents. Update by updating this value. | int | `3.20` | no |
+| swarm_version | The version of swarm plugin to install on the agents. Update by updating this value. | int | `3.21` | no |
 | tags | tags to define locally, and interpolate into the tags in this module. | string | `N/A` | yes |
 | vpc_name | The name of the VPC the infrastructure will be deployed to. | string | `N/A` | yes |
 
