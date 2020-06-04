@@ -390,8 +390,9 @@ resource "aws_iam_role_policy_attachment" "agent_policy_attachment" {
 }
 
 resource "aws_cloudwatch_log_group" "agent_logs" {
-  name = "${var.application}-agent-logs"
-  tags = merge(var.tags, { Name = "${var.application}-agent-logs" })
+  name              = "${var.application}-agent-logs"
+  retention_in_days = var.retention_in_days
+  tags              = merge(var.tags, { Name = "${var.application}-agent-logs" })
 }
 
 data "template_cloudinit_config" "agent_init" {
@@ -683,8 +684,9 @@ resource "aws_iam_role_policy_attachment" "master_policy_attachment" {
 }
 
 resource "aws_cloudwatch_log_group" "master_logs" {
-  name = "${var.application}-master-logs"
-  tags = merge(var.tags, { Name = "${var.application}-master-logs" })
+  name              = "${var.application}-master-logs"
+  retention_in_days = var.retention_in_days
+  tags              = merge(var.tags, { Name = "${var.application}-master-logs" })
 }
 
 data "template_cloudinit_config" "master_init" {

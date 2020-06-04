@@ -127,6 +127,11 @@ variable "region" {
   description = "The AWS region to deploy the infrastructure too."
 }
 
+variable "retention_in_days" {
+  description = "How many days to retain cloudwatch logs."
+  default     = 90
+}
+
 variable "scale_down_number" {
   default     = -1
   description = "Number of agents to destroy when scaling down."
