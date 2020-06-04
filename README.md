@@ -34,7 +34,7 @@ To be used with a local map of tags.
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.5.2"
+  version = "2.x.x"
 
   admin_password  = "foo"
   bastion_sg_name = "bastion-sg"
@@ -61,7 +61,7 @@ module "jenkins_ha_agents" {
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.5.2"
+  version = "2.x.x"
 
   admin_password    = "foo"
   agent_max         = 6
@@ -94,7 +94,9 @@ module "jenkins_ha_agents" {
   extra_master_userdata       = data.template_file.extra_master_userdata.rendered
   extra_master_userdata_merge = "list(append)+dict(recurse_array)+str()"
 
-  executors              = "4"
+  retention_in_days = 90
+
+  executors              = 4
   instance_type          = ["t3a.xlarge", "t3.xlarge", "t2.xlarge"]
   jenkins_version        = "2.222.4"
   password_ssm_parameter = "/admin_password"
@@ -108,7 +110,7 @@ module "jenkins_ha_agents" {
   ssl_certificate = "*.foo.io"
 
   ssm_parameter = "/jenkins/foo"
-  swarm_version = "3.20"
+  swarm_version = "3.21"
   tags          = local.tags
   vpc_name      = "prod-vpc"
 }
@@ -204,11 +206,12 @@ runcmd:
 | public_subnet_name | The name prefix of the public subnets to pull in as a data source. | string | `N/A` | yes |
 | r53_record | The FQDN for the route 53 record. | string | `N/A` | yes |
 | region | The AWS region to deploy the infrastructure too. | string | `N/A` | yes |
+| retention_in_days| How many days to retain cloudwatch logs. | int | `90` | no |
 | scale_down_number | Number of agents to destroy when scaling down. | int | `-1` | no |
 | scale_up_number | Number of agents to create when scaling up. | int | `1` | no |
 | ssl_certificate | The name of the SSL certificate to use on the load balancer. | string | `N/A` | yes |
 | ssm_parameter | The full ssm parameter path that will house the api key and master admin password. Also used to grant IAM access to this resource. | string | `N/A` | yes |
-| swarm_version | The version of swarm plugin to install on the agents. Update by updating this value. | int | `3.20` | no |
+| swarm_version | The version of swarm plugin to install on the agents. Update by updating this value. | int | `3.21` | no |
 | tags | tags to define locally, and interpolate into the tags in this module. | string | `N/A` | yes |
 | vpc_name | The name of the VPC the infrastructure will be deployed to. | string | `N/A` | yes |
 

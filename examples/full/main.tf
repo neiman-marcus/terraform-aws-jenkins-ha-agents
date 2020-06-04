@@ -52,6 +52,8 @@ module "jenkins_ha_agents" {
   extra_master_userdata       = data.template_file.extra_master_userdata.rendered
   extra_master_userdata_merge = "list(append)+dict(recurse_array)+str()"
 
+  retention_in_days = var.retention_in_days
+
   executors              = var.executors
   instance_type          = var.instance_type
   jenkins_version        = var.jenkins_version

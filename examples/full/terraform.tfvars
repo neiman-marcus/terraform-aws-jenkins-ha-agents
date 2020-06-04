@@ -50,6 +50,8 @@ r53_record = "jenkins.foo.io"
 
 region = "us-east-1"
 
+retention_in_days = 90
+
 scale_down_number = -1
 
 scale_up_number = 1
@@ -58,6 +60,6 @@ ssl_certificate = "*.foo.io"
 
 ssm_parameter = "/jenkins/foo"
 
-swarm_version = "3.20"
+swarm_version = "3.21"
 
 vpc_name = "prod-vpc"
