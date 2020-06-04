@@ -93,7 +93,7 @@ variable "instance_type" {
 
 variable "jenkins_version" {
   description = "The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group."
-  default     = "2.222.3"
+  default     = "2.222.4"
 }
 
 variable "key_name" {
@@ -147,7 +147,7 @@ variable "ssm_parameter" {
 
 variable "swarm_version" {
   description = "The version of swarm plugin to install on the agents. Update by updating this value."
-  default     = "3.19"
+  default     = "3.20"
 }
 
 variable "vpc_name" {
