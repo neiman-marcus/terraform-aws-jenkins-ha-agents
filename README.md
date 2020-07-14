@@ -2,7 +2,7 @@
 
 # terraform-aws-jenkins-ha-agents
 
-![version](https://img.shields.io/badge/version-v2.5.4-green.svg?style=flat) ![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)
+[![verson](https://img.shields.io/github/v/release/neiman-marcus/terraform-aws-jenkins-ha-agents)](https://registry.terraform.io/modules/neiman-marcus/jenkins-ha-agents/aws) [![build](https://img.shields.io/github/workflow/status/neiman-marcus/terraform-aws-jenkins-ha-agents/tf-lint)](https://github.com/neiman-marcus/terraform-aws-jenkins-ha-agents/actions?query=workflow%3Atf-lint) [![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/neiman-marcus/terraform-aws-jenkins-ha-agents/blob/master/LICENSE) [![pr](https://img.shields.io/badge/PRs-welcome-blue.svg)](https://github.com/neiman-marcus/terraform-aws-jenkins-ha-agents/blob/master/CONTRIBUTING.md)
 
 A module for deploying Jenkins in a highly available and highly scalable manner.
 
