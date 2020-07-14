@@ -19,7 +19,7 @@ locals {
 }
 
 module "jenkins_ha_agents" {
-  source  = "neiman-marcus/jenkins-ha-agents/aws"
+  source  = "../../"
 
   admin_password    = var.admin_password
   agent_max         = var.agent_max
