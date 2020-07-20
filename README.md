@@ -97,7 +97,7 @@ module "jenkins_ha_agents" {
 
   executors              = 4
   instance_type          = ["t3a.xlarge", "t3.xlarge", "t2.xlarge"]
-  jenkins_version        = "2.235.1"
+  jenkins_version        = "2.235.2"
   password_ssm_parameter = "/admin_password"
 
   cidr_ingress        = ["0.0.0.0/0"]
@@ -197,7 +197,7 @@ runcmd:
 | extra_master_userdata       | Extra master user-data to add to the default built-in. Created from a template outside of the module.                                                                      | string |                   `empty`                    |    no    |
 | extra_master_userdata_merge | Control how cloud-init merges custom master user-data sections.                                                                                                            | string | `list(append) + dict(recurse_array) + str()` |    no    |
 | instance_type               | The type of instances to use for both ASG's. The first value in the list will be set as the master instance.                                                               |  list  |      `t3a.xlarge, t3.xlarge, t2.xlarge`      |    no    |
-| jenkins_version             | The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group. | string |                  `2.235.1`                   |    no    |
+| jenkins_version             | The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group. | string |                  `2.235.2`                   |    no    |
 | key_name                    | SSH Key to launch instances.                                                                                                                                               | string |                    `null`                    |    no    |
 | master_lt_version           | The version of the master launch template to use. Only use if you need to programatically select an older version of the launch template. Not recommended to change.       | string |                  `$Latest`                   |    no    |
 | password_ssm_parameter      | The path value of the master admin passowrd, stored in ssm parameter store.                                                                                                | string |              `/admin_password`               |    no    |
