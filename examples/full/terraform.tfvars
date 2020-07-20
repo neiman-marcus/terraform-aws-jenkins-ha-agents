@@ -34,7 +34,7 @@ executors = 4
 
 instance_type = ["t3a.xlarge", "t3.xlarge", "t2.xlarge"]
 
-jenkins_version = "2.235.1"
+jenkins_version = "2.235.2"
 
 key_name = "foo"
 
