@@ -9,8 +9,8 @@ terraform {
 
 locals {
   tags = {
-    agent  = merge(var.tags, { Name = "${var.application}-agent" }),
-    master = merge(var.tags, { Name = "${var.application}-master" })
+    agent  = merge(var.tags, { "Name" = "${var.application}-agent" }),
+    master = merge(var.tags, { "Name" = "${var.application}-master" })
   }
 }
 
@@ -78,7 +78,7 @@ resource "aws_lb" "lb" {
   subnets                    = data.aws_subnet_ids.public.ids
   enable_deletion_protection = false
 
-  tags = merge(var.tags, { Name = "${var.application}-lb" })
+  tags = merge(var.tags, { "Name" = "${var.application}-lb" })
 }
 
 resource "aws_security_group" "lb_sg" {
@@ -107,7 +107,7 @@ resource "aws_security_group" "lb_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge(var.tags, { Name = "${var.application}-lb-sg" })
+  tags = merge(var.tags, { "Name" = "${var.application}-lb-sg" })
 }
 
 resource "aws_route53_record" "r53_record" {
@@ -243,7 +243,7 @@ resource "aws_launch_template" "agent_lt" {
     no_device   = true
 
     ebs {
-      volume_size           = 20
+      volume_size           = var.agent_volume_size
       encrypted             = true
       delete_on_termination = true
       volume_type           = "gp2"
@@ -273,7 +273,7 @@ resource "aws_launch_template" "agent_lt" {
     tags          = local.tags.agent
   }
 
-  tags = merge(var.tags, { Name = "${var.application}-agent-lt" })
+  tags = merge(var.tags, { "Name" = "${var.application}-agent-lt" })
 }
 
 resource "aws_security_group" "agent_sg" {
@@ -296,7 +296,7 @@ resource "aws_security_group" "agent_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge(var.tags, { Name = "${var.application}-agent-sg" })
+  tags = merge(var.tags, { "Name" = "${var.application}-agent-sg" })
 }
 
 resource "aws_iam_instance_profile" "agent_ip" {
@@ -324,7 +324,7 @@ resource "aws_iam_role" "agent_iam_role" {
 }
 EOF
 
-  tags = merge(var.tags, { Name = "${var.application}-agent-iam-role" })
+  tags = merge(var.tags, { "Name" = "${var.application}-agent-iam-role" })
 }
 
 resource "aws_iam_role_policy" "agent_inline_policy" {
@@ -392,7 +392,7 @@ resource "aws_iam_role_policy_attachment" "agent_policy_attachment" {
 resource "aws_cloudwatch_log_group" "agent_logs" {
   name              = "${var.application}-agent-logs"
   retention_in_days = var.retention_in_days
-  tags              = merge(var.tags, { Name = "${var.application}-agent-logs" })
+  tags              = merge(var.tags, { "Name" = "${var.application}-agent-logs" })
 }
 
 data "template_cloudinit_config" "agent_init" {
@@ -556,7 +556,7 @@ resource "aws_launch_template" "master_lt" {
     tags          = local.tags.master
   }
 
-  tags = merge(var.tags, { Name = "${var.application}-master-lt" })
+  tags = merge(var.tags, { "Name" = "${var.application}-master-lt" })
 }
 
 resource "aws_security_group" "master_sg" {
@@ -595,7 +595,7 @@ resource "aws_security_group" "master_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge(var.tags, { Name = "${var.application}-master-sg" })
+  tags = merge(var.tags, { "Name" = "${var.application}-master-sg" })
 }
 
 resource "aws_iam_instance_profile" "master_ip" {
@@ -623,7 +623,7 @@ resource "aws_iam_role" "master_iam_role" {
 }
 EOF
 
-  tags = merge(var.tags, { Name = "${var.application}-master-iam-role" })
+  tags = merge(var.tags, { "Name" = "${var.application}-master-iam-role" })
 }
 
 resource "aws_iam_role_policy" "master_inline_policy" {
@@ -686,7 +686,7 @@ resource "aws_iam_role_policy_attachment" "master_policy_attachment" {
 resource "aws_cloudwatch_log_group" "master_logs" {
   name              = "${var.application}-master-logs"
   retention_in_days = var.retention_in_days
-  tags              = merge(var.tags, { Name = "${var.application}-master-logs" })
+  tags              = merge(var.tags, { "Name" = "${var.application}-master-logs" })
 }
 
 data "template_cloudinit_config" "master_init" {
@@ -760,7 +760,7 @@ resource "aws_efs_file_system" "master_efs" {
   throughput_mode                 = var.efs_mode
   provisioned_throughput_in_mibps = var.efs_mode == "provisioned" ? var.efs_provisioned_throughput : null
 
-  tags = merge(var.tags, { Name = "${var.application}-master-efs" })
+  tags = merge(var.tags, { "Name" = "${var.application}-master-efs" })
 }
 
 resource "aws_efs_mount_target" "mount_targets" {
@@ -791,7 +791,7 @@ resource "aws_security_group" "master_storage_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge(var.tags, { Name = "${var.application}-master-storage-sg" })
+  tags = merge(var.tags, { "Name" = "${var.application}-master-storage-sg" })
 }
 
 resource "aws_lb_target_group" "master_tg" {
@@ -811,7 +811,7 @@ resource "aws_lb_target_group" "master_tg" {
     matcher             = "200-299"
   }
 
-  tags = merge(var.tags, { Name = "${var.application}-master-tg" })
+  tags = merge(var.tags, { "Name" = "${var.application}-master-tg" })
 }
 
 resource "aws_lb_listener" "master_lb_listener" {
