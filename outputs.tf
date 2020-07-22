@@ -8,6 +8,16 @@ output "agent_iam_role" {
   value       = aws_iam_role.agent_iam_role.name
 }
 
+output "lb_dns_name" {
+  value       = aws_lb.lb.dns_name
+  description = "The DNS name of the load balancer."
+}
+
+output "lb_zone_id" {
+  value       = aws_lb.lb.zone_id
+  description = "The canonical hosted zone ID of the load balancer."
+}
+
 output "master_asg" {
   description = "The name of the master asg. Use for adding to addition outside resources."
   value       = aws_autoscaling_group.master_asg.name
