@@ -197,7 +197,7 @@ resource "aws_autoscaling_group" "agent_asg" {
     instances_distribution {
       on_demand_base_capacity                  = 0
       on_demand_percentage_above_base_capacity = 0
-      spot_instance_pools                      = length(var.instance_type)
+      spot_instance_pools                      = length(var.agent_instance_types)
     }
 
     launch_template {
@@ -207,7 +207,7 @@ resource "aws_autoscaling_group" "agent_asg" {
       }
 
       dynamic "override" {
-        for_each = var.instance_type
+        for_each = var.agent_instance_types
         content {
           instance_type = override.value
         }
@@ -254,7 +254,7 @@ resource "aws_launch_template" "agent_lt" {
   key_name      = var.key_name
   ebs_optimized = false
 
-  instance_type = var.instance_type[0]
+  instance_type = var.agent_instance_types[0]
   user_data     = data.template_cloudinit_config.agent_init.rendered
 
   monitoring {
@@ -493,7 +493,7 @@ resource "aws_autoscaling_group" "master_asg" {
       }
 
       override {
-        instance_type = var.instance_type[0]
+        instance_type = var.master_instance_type
       }
 
     }
@@ -537,7 +537,7 @@ resource "aws_launch_template" "master_lt" {
   key_name      = var.key_name
   ebs_optimized = false
 
-  instance_type = var.instance_type[0]
+  instance_type = var.master_instance_type
   user_data     = data.template_cloudinit_config.master_init.rendered
 
   monitoring {
