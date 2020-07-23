@@ -101,7 +101,12 @@ variable "extra_master_userdata_merge" {
   description = "Control how cloud-init merges extra master user-data sections."
 }
 
-variable "instance_type" {
+variable "master_instance_type" {
+  description = "The type of instances to use for both ASG's. The first value in the list will be set as the master instance."
+  default     = "t3.xlarge"
+}
+
+variable "agent_instance_types" {
   description = "The type of instances to use for both ASG's. The first value in the list will be set as the master instance."
   default     = ["t3a.xlarge", "t3.xlarge", "t2.xlarge"]
 }
