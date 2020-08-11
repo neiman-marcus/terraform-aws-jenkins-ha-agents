@@ -20,7 +20,9 @@ Related blog post can be found on the [Neiman Marcus Medium page](https://medium
 
 ## Terraform & Module Version
 
-Terraform 0.12. Pin module version to `~> v2.0`. Submit pull-requests to `master` branch.
+Terraform 0.13. Pin module version to `~> v3.0`. Submit pull-requests to `master` branch.
+
+Terraform 0.12. Pin module version to `~> v2.0`. Submit pull-requests to `terraform12` branch.
 
 Terraform 0.11. Pin module version to `~> v1.0`. ~~Submit pull-requests to `terraform11` branch.~~ Terraform 0.11 support is deprecated in this module.
 
@@ -33,7 +35,7 @@ To be used with a local map of tags.
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.x.x"
+  version = "x.x.x"
 
   admin_password  = "foo"
   bastion_sg_name = "bastion-sg"
@@ -60,7 +62,7 @@ module "jenkins_ha_agents" {
 ```TERRAFORM
 module "jenkins_ha_agents" {
   source  = "neiman-marcus/jenkins-ha-agents/aws"
-  version = "2.x.x"
+  version = "x.x.x"
 
   admin_password    = "foo"
   agent_max         = 6
