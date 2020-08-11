@@ -20,11 +20,11 @@ Related blog post can be found on the [Neiman Marcus Medium page](https://medium
 
 ## Terraform & Module Version
 
-Terraform 0.13. Pin module version to `~> v3.0`. Submit pull-requests to `master` branch.
+**Terraform 0.13** - Pin module version to `~> v3.0`. Submit pull-requests to `master` branch.
 
-Terraform 0.12. Pin module version to `~> v2.0`. Submit pull-requests to `terraform12` branch. Only bug fixs will be accepted. All new developement will be on Terraform 0.13.
+**Terraform 0.12** - Pin module version to `~> v2.0`. Submit pull-requests to `terraform12` branch. Only bug fixs will be accepted. All new developement will be on Terraform 0.13.
 
-Terraform 0.11. Pin module version to `~> v1.0`. ~~Submit pull-requests to `terraform11` branch.~~ Terraform 0.11 support is deprecated in this module.
+**Terraform 0.11** - Deprecated in this module.
 
 ## Usage
 
