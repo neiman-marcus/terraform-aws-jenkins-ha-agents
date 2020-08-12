@@ -351,7 +351,6 @@ resource "aws_iam_role_policy" "agent_inline_policy" {
     },
     {
       "Action": [
-        "logs:CreateLogGroup",
         "logs:CreateLogStream",
         "logs:PutLogEvents",
         "logs:DescribeLogStreams"
@@ -657,7 +656,6 @@ resource "aws_iam_role_policy" "master_inline_policy" {
     },
     {
       "Action": [
-        "logs:CreateLogGroup",
         "logs:CreateLogStream",
         "logs:PutLogEvents",
         "logs:DescribeLogStreams"
