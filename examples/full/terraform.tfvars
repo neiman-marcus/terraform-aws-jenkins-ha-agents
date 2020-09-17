@@ -34,7 +34,7 @@ executors = 4
 
 instance_type = ["t3a.xlarge", "t3.xlarge", "t2.xlarge"]
 
-jenkins_version = "2.235.5"
+jenkins_version = "2.249.1"
 
 key_name = "foo"
 
@@ -60,6 +60,6 @@ ssl_certificate = "*.foo.io"
 
 ssm_parameter = "/jenkins/foo"
 
-swarm_version = "3.22"
+swarm_version = "3.23"
 
 vpc_name = "prod-vpc"
