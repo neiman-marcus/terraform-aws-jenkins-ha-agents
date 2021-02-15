@@ -356,7 +356,7 @@ resource "aws_iam_role_policy" "agent_inline_policy" {
         "logs:DescribeLogStreams"
       ],
       "Effect": "Allow",
-      "Resource": "${aws_cloudwatch_log_group.agent_logs.arn}"
+      "Resource": "${aws_cloudwatch_log_group.agent_logs.arn}:*"
     },
     {
       "Action": [
@@ -661,7 +661,7 @@ resource "aws_iam_role_policy" "master_inline_policy" {
         "logs:DescribeLogStreams"
       ],
       "Effect": "Allow",
-      "Resource": "${aws_cloudwatch_log_group.master_logs.arn}"
+      "Resource": "${aws_cloudwatch_log_group.master_logs.arn}:*"
     },
     {
       "Action": [
