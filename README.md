@@ -22,7 +22,7 @@ Related blog post can be found on the [Neiman Marcus Medium page](https://medium
 
 **Terraform 0.13** - Pin module version to `~> v3.0`. Submit pull-requests to `master` branch.
 
-**Terraform 0.12** - Pin module version to `~> v2.0`. Submit pull-requests to `terraform12` branch. Only bug fixs will be accepted. All new developement will be on Terraform 0.13.
+**Terraform 0.12** - Pin module version to `~> v2.0`. Submit pull-requests to `terraform12` branch. Only bug fixes will be accepted. All new developement will be on Terraform 0.13.
 
 **Terraform 0.11** - Deprecated in this module.
 
@@ -256,7 +256,7 @@ N/A
   - This allows for more than two hardcoded subnets.
   - You may have to destroy several resources and create them again, including mount targets.
   - As long as you do not delete your EFS volume, there should be no data loss.
-- Cidr blocks have been consolidated to reduce redundant configuration.
+- CIDR blocks have been consolidated to reduce redundant configuration.
 
 ## How it works
 
@@ -310,7 +310,7 @@ The goal is to completely define the deployment with code. If a plugin is used a
 
 ## Possible Improvements
 
-Below are a list of possible improvements identified. Please feel free to develope and test. These may or may not be implemented.
+Below are a list of possible improvements identified. Please feel free to develop and test. These may or may not be implemented.
 
 - Fargate agents instead of instances
 - Fargate master with EFS mount
@@ -323,7 +323,7 @@ Below are a list of possible improvements identified. Please feel free to develo
 
 ## Authors
 
-- [**Clay Danford**](mailto:clay_danford@neimanmarcus.com) - Project creation and development.
+- [**Raul Dominguez**](mailto:raul_dominguez@neimanmarcus.com) - Project maintenance.
 
 ## Conduct / Contributing / License
 
@@ -334,3 +334,4 @@ Below are a list of possible improvements identified. Please feel free to develo
 ## Acknowledgments
 
 - [**Cloudonaut.io Template**](https://github.com/widdix/aws-cf-templates/blob/master/jenkins/jenkins2-ha-agents.yaml) - Original cloudformation template, this project is based on.
+- Special thanks to Clay Danford for the creation and development of this module.
