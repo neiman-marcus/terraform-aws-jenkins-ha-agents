@@ -130,7 +130,7 @@ variable "instance_type" {
 variable "jenkins_version" {
   description = "The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group."
   type        = string
-  default     = "2.303.2"
+  default     = "2.303.3"
 }
 
 variable "key_name" {
