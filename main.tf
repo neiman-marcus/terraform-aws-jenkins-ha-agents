@@ -64,8 +64,8 @@ data "aws_subnet_ids" "public" {
 }
 
 data "aws_acm_certificate" "certificate" {
-  domain   = var.ssl_certificate
-  statuses = ["ISSUED"]
+  domain      = var.ssl_certificate
+  statuses    = ["ISSUED"]
   most_recent = true
 }
 
