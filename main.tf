@@ -196,7 +196,7 @@ resource "aws_autoscaling_group" "agent_asg" {
   health_check_grace_period = 300
   health_check_type         = "EC2"
   name                      = "${var.application}-agent-asg"
-  default_cooldown          = 100
+  default_cooldown          = var.asg_default_cooldown
 
   vpc_zone_identifier = data.aws_subnet_ids.private.ids
 
