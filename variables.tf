@@ -130,7 +130,7 @@ variable "instance_type" {
 variable "jenkins_version" {
   description = "The version number of Jenkins to use on the master. Change this value when a new version comes out, and it will update the launch configuration and the autoscaling group."
   type        = string
-  default     = "2.332.1"
+  default     = "2.332.2"
 }
 
 variable "key_name" {
@@ -213,4 +213,10 @@ variable "tags" {
 variable "vpc_name" {
   description = "The name of the VPC the infrastructure will be deployed to."
   type        = string
+}
+
+variable "asg_default_cooldown" {
+  description = "cooling period for ASG to pick up another scaling activity after one is complete"
+  type        = number
+  default     = 500
 }
