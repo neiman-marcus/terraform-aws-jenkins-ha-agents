@@ -218,5 +218,5 @@ variable "vpc_name" {
 variable "asg_default_cooldown" {
   description = "cooling period for ASG to pick up another scaling activity after one is complete"
   type        = number
-  default     = 100
+  default     = 500
 }
