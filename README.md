@@ -89,7 +89,7 @@ module "jenkins_ha_agents" {
   scale_down_number = -1
   scale_up_number   = 1
 
-  custom_plugins              = data.template_file.custom_plugins.rendered
+  custom_plugins              = templatefile("init/custom_plugins.cfg",{})
   extra_agent_userdata        = data.template_file.extra_agent_userdata.rendered
   extra_agent_userdata_merge  = "list(append)+dict(recurse_array)+str()"
   extra_master_userdata       = data.template_file.extra_master_userdata.rendered

@@ -10,10 +10,6 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 2.25"
     }
-    template = {
-      source  = "hashicorp/template"
-      version = ">= 2.1"
-    }
   }
 }
 
@@ -49,10 +45,16 @@ module "jenkins_ha_agents" {
 
   auto_update_plugins_cron = var.auto_update_plugins_cron
 
-  custom_plugins              = data.template_file.custom_plugins.rendered
-  extra_agent_userdata        = data.template_file.extra_agent_userdata.rendered
-  extra_agent_userdata_merge  = "list(append)+dict(recurse_array)+str()"
-  extra_master_userdata       = data.template_file.extra_master_userdata.rendered
+  custom_plugins = templatefile("init/custom_plugins.cfg", {})
+  extra_agent_userdata = templatefile("init/extra-agent-userdata.cfg",
+    {
+      foo = "bar"
+  })
+  extra_agent_userdata_merge = "list(append)+dict(recurse_array)+str()"
+  extra_master_userdata = templatefile("init/extra-master-userdata.cfg",
+    {
+      foo = "bar"
+  })
   extra_master_userdata_merge = "list(append)+dict(recurse_array)+str()"
 
   retention_in_days = var.retention_in_days
@@ -76,23 +78,4 @@ module "jenkins_ha_agents" {
   vpc_name      = var.vpc_name
 }
 
-data "template_file" "extra_agent_userdata" {
-  template = file("init/extra-agent-userdata.cfg")
-
-  vars = {
-    foo = "bar"
-  }
-}
-
-data "template_file" "extra_master_userdata" {
-  template = file("init/extra-master-userdata.cfg")
-
-  vars = {
-    foo = "bar"
-  }
-}
-
-data "template_file" "custom_plugins" {
-  template = file("init/custom_plugins.cfg")
-}
 
