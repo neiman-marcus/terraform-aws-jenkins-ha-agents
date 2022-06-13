@@ -436,7 +436,7 @@ data "template_cloudinit_config" "agent_init" {
 
   part {
     content_type = "text/cloud-config"
-    content      = templatefile("${path.module}/init/agent-end.cfg")
+    content      = templatefile("${path.module}/init/agent-end.cfg", {})
     merge_type   = "list(append)+dict(recurse_array)+str()"
   }
 }
@@ -727,7 +727,7 @@ data "template_cloudinit_config" "master_init" {
 
   part {
     content_type = "text/cloud-config"
-    content      = templatefile("${path.module}/init/master-end.cfg")
+    content      = templatefile("${path.module}/init/master-end.cfg", {})
     merge_type   = "list(append)+dict(recurse_array)+str()"
   }
 }
