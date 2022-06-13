@@ -6,10 +6,6 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 2.25"
     }
-    template = {
-      source  = "hashicorp/template"
-      version = ">= 2.1"
-    }
   }
 }
 
@@ -403,6 +399,7 @@ resource "aws_cloudwatch_log_group" "agent_logs" {
   tags              = merge(var.tags, { "Name" = "${var.application}-agent-logs" })
 }
 
+#using templatefile as per the new terraform provider version
 data "template_cloudinit_config" "agent_init" {
   gzip          = true
   base64_encode = true
@@ -410,12 +407,25 @@ data "template_cloudinit_config" "agent_init" {
   part {
     filename     = "agent.cfg"
     content_type = "text/cloud-config"
-    content      = data.template_file.agent_write_files.rendered
+    content = templatefile("${path.module}/init/agent-write-files.cfg",
+      {
+        agent_logs    = aws_cloudwatch_log_group.agent_logs.name,
+        aws_region    = var.region,
+        executors     = var.executors,
+        swarm_version = var.swarm_version
+    })
   }
 
   part {
     content_type = "text/cloud-config"
-    content      = data.template_file.agent_runcmd.rendered
+    content = templatefile("${path.module}/init/agent-runcmd.cfg",
+      {
+        api_ssm_parameter = "${var.ssm_parameter}${var.api_ssm_parameter}",
+        aws_region        = var.region,
+        master_asg        = aws_autoscaling_group.master_asg.name,
+        swarm_version     = var.swarm_version
+      }
+    )
   }
 
   part {
@@ -426,35 +436,9 @@ data "template_cloudinit_config" "agent_init" {
 
   part {
     content_type = "text/cloud-config"
-    content      = data.template_file.agent_end.rendered
+    content      = templatefile("${path.module}/init/agent-end.cfg")
     merge_type   = "list(append)+dict(recurse_array)+str()"
   }
-}
-
-data "template_file" "agent_write_files" {
-  template = file("${path.module}/init/agent-write-files.cfg")
-
-  vars = {
-    agent_logs    = aws_cloudwatch_log_group.agent_logs.name
-    aws_region    = var.region
-    executors     = var.executors
-    swarm_version = var.swarm_version
-  }
-}
-
-data "template_file" "agent_runcmd" {
-  template = file("${path.module}/init/agent-runcmd.cfg")
-
-  vars = {
-    api_ssm_parameter = "${var.ssm_parameter}${var.api_ssm_parameter}"
-    aws_region        = var.region
-    master_asg        = aws_autoscaling_group.master_asg.name
-    swarm_version     = var.swarm_version
-  }
-}
-
-data "template_file" "agent_end" {
-  template = file("${path.module}/init/agent-end.cfg")
 }
 
 resource "aws_autoscaling_policy" "agent_scale_up_policy" {
@@ -704,7 +688,17 @@ data "template_cloudinit_config" "master_init" {
   part {
     filename     = "master.cfg"
     content_type = "text/cloud-config"
-    content      = data.template_file.master_write_files.rendered
+    content = templatefile("${path.module}/init/master-write-files.cfg",
+      {
+        admin_password           = var.admin_password,
+        api_ssm_parameter        = "${var.ssm_parameter}${var.api_ssm_parameter}",
+        application              = var.application,
+        auto_update_plugins_cron = var.auto_update_plugins_cron,
+        aws_region               = var.region,
+        executors_min            = var.agent_min * var.executors,
+        master_logs              = aws_cloudwatch_log_group.master_logs.name
+      }
+    )
   }
 
   part {
@@ -715,7 +709,14 @@ data "template_cloudinit_config" "master_init" {
 
   part {
     content_type = "text/cloud-config"
-    content      = data.template_file.master_runcmd.rendered
+    content = templatefile("${path.module}/init/master-runcmd.cfg",
+      {
+        admin_password  = var.admin_password,
+        aws_region      = var.region,
+        jenkins_version = var.jenkins_version,
+        master_storage  = aws_efs_file_system.master_efs.id
+      }
+    )
   }
 
   part {
@@ -726,38 +727,9 @@ data "template_cloudinit_config" "master_init" {
 
   part {
     content_type = "text/cloud-config"
-    content      = data.template_file.master_end.rendered
+    content      = templatefile("${path.module}/init/master-end.cfg")
     merge_type   = "list(append)+dict(recurse_array)+str()"
   }
-}
-
-data "template_file" "master_write_files" {
-  template = file("${path.module}/init/master-write-files.cfg")
-
-  vars = {
-    admin_password           = var.admin_password
-    api_ssm_parameter        = "${var.ssm_parameter}${var.api_ssm_parameter}"
-    application              = var.application
-    auto_update_plugins_cron = var.auto_update_plugins_cron
-    aws_region               = var.region
-    executors_min            = var.agent_min * var.executors
-    master_logs              = aws_cloudwatch_log_group.master_logs.name
-  }
-}
-
-data "template_file" "master_runcmd" {
-  template = file("${path.module}/init/master-runcmd.cfg")
-
-  vars = {
-    admin_password  = var.admin_password
-    aws_region      = var.region
-    jenkins_version = var.jenkins_version
-    master_storage  = aws_efs_file_system.master_efs.id
-  }
-}
-
-data "template_file" "master_end" {
-  template = file("${path.module}/init/master-end.cfg")
 }
 
 resource "aws_efs_file_system" "master_efs" {
