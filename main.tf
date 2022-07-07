@@ -193,6 +193,7 @@ resource "aws_autoscaling_group" "agent_asg" {
   health_check_type         = "EC2"
   name                      = "${var.application}-agent-asg"
   default_cooldown          = var.asg_default_cooldown
+  enabled_metrics           = var.agent_enabled_metrics
 
   vpc_zone_identifier = data.aws_subnet_ids.private.ids
 
@@ -467,6 +468,8 @@ resource "aws_autoscaling_group" "master_asg" {
   health_check_type         = "ELB"
 
   name = "${var.application}-master-asg"
+
+  enabled_metrics = var.master_enabled_metrics
 
   vpc_zone_identifier = data.aws_subnet_ids.private.ids
 
