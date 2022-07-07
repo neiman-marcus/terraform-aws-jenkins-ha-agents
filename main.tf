@@ -84,7 +84,7 @@ resource "aws_lb" "lb" {
   idle_timeout               = 60
   internal                   = false
   security_groups            = [aws_security_group.lb_sg.id]
-  subnets                    = data.aws_subnet_ids.public.ids
+  subnets                    = data.aws_subnets.public.ids
   enable_deletion_protection = false
 
   tags = merge(var.tags, { "Name" = "${var.application}-lb" })
@@ -201,7 +201,7 @@ resource "aws_autoscaling_group" "agent_asg" {
   default_cooldown          = var.asg_default_cooldown
   enabled_metrics           = var.agent_enabled_metrics
 
-  vpc_zone_identifier = data.aws_subnet_ids.private.ids
+  vpc_zone_identifier = data.aws_subnets.private.ids
 
   mixed_instances_policy {
 
@@ -477,7 +477,7 @@ resource "aws_autoscaling_group" "master_asg" {
 
   enabled_metrics = var.master_enabled_metrics
 
-  vpc_zone_identifier = data.aws_subnet_ids.private.ids
+  vpc_zone_identifier = data.aws_subnets.private.ids
 
   target_group_arns = [aws_lb_target_group.master_tg.arn]
 
@@ -753,7 +753,7 @@ resource "aws_efs_file_system" "master_efs" {
 }
 
 resource "aws_efs_mount_target" "mount_targets" {
-  for_each = toset(data.aws_subnet_ids.private.ids)
+  for_each = toset(data.aws_subnets.private.ids)
 
   file_system_id  = aws_efs_file_system.master_efs.id
   subnet_id       = each.key
