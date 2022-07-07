@@ -220,3 +220,15 @@ variable "asg_default_cooldown" {
   type        = number
   default     = 500
 }
+
+variable "agent_enabled_metrics" {
+  description = "A list of metrics to collect for each agent"
+  type        = list(any)
+  default     = []
+}
+
+variable "master_enabled_metrics" {
+  description = "A list of metrics to collect for the master"
+  type        = list(any)
+  default     = []
+}
