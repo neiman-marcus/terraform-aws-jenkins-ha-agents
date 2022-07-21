@@ -765,6 +765,14 @@ resource "aws_efs_mount_target" "mount_target_b" {
     aws_security_group.master_storage_sg.id]
 }
 
+resource "aws_efs_backup_policy" "policy" {
+  file_system_id = aws_efs_file_system.master_efs.id
+
+  backup_policy {
+    status = "ENABLED"
+  }
+}
+
 resource "aws_security_group" "master_storage_sg" {
   name        = "${var.application}-master-storage-sg"
   description = "${var.application}-master-storage-sg"
