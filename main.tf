@@ -217,6 +217,7 @@ resource "aws_autoscaling_group" "agent_asg" {
         version            = var.agent_lt_version
       }
 
+      # Why???
       dynamic "override" {
         for_each = var.instance_type
         content {
@@ -265,7 +266,7 @@ resource "aws_launch_template" "agent_lt" {
   key_name      = var.key_name
   ebs_optimized = false
 
-  instance_type = var.instance_type[0]
+  instance_type = var.instance_type_agents[0]
   user_data     = data.template_cloudinit_config.agent_init.rendered
 
   monitoring {
@@ -494,7 +495,7 @@ resource "aws_autoscaling_group" "master_asg" {
       }
 
       override {
-        instance_type = var.instance_type[0]
+        instance_type = var.instance_type_controller[0]
       }
 
     }
@@ -538,7 +539,7 @@ resource "aws_launch_template" "master_lt" {
   key_name      = var.key_name
   ebs_optimized = false
 
-  instance_type = var.instance_type[0]
+  instance_type = var.instance_type_controller[0]
   user_data     = data.template_cloudinit_config.master_init.rendered
 
   monitoring {
