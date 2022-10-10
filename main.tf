@@ -208,7 +208,7 @@ resource "aws_autoscaling_group" "agent_asg" {
     instances_distribution {
       on_demand_base_capacity                  = 0
       on_demand_percentage_above_base_capacity = 0
-      spot_instance_pools                      = length(var.instance_type)
+      spot_instance_pools                      = length(var.instance_type_agents)
     }
 
     launch_template {
@@ -219,7 +219,7 @@ resource "aws_autoscaling_group" "agent_asg" {
 
       # Why???
       dynamic "override" {
-        for_each = var.instance_type
+        for_each = var.instance_type_agents
         content {
           instance_type = override.value
         }
