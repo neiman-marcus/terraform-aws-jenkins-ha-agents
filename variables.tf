@@ -122,13 +122,13 @@ variable "extra_master_userdata_merge" {
 }
 
 variable "instance_type_controller" {
-  description = "The type of instances to use for both ASG's. The first value in the list will be set as the master instance."
+  description = "The type of instances to use for controller autoscaling group (ASG)."
   type        = list(string)
   default     = ["t3a.xlarge"]
 }
 
 variable "instance_type_agents" {
-  description = "The type of instances to use for both ASG's. The first value in the list will be set as the master instance."
+  description = "The type of instances to use for agent's autoscaling group (ASG)"
   type        = list(string)
   default     = ["t3.xlarge", "t3a.xlarge", "t2.xlarge", "t2a.xlarge"]
 }

@@ -59,10 +59,11 @@ module "jenkins_ha_agents" {
 
   retention_in_days = var.retention_in_days
 
-  executors              = var.executors
-  instance_type          = var.instance_type
-  jenkins_version        = var.jenkins_version
-  password_ssm_parameter = var.password_ssm_parameter
+  executors                = var.executors
+  instance_type            = var.instance_type
+  instance_type_controller = var.instance_type_controller
+  instance_type_agents     = var.instance_type_agents
+  password_ssm_parameter   = var.password_ssm_parameter
 
   cidr_ingress        = var.cidr_ingress
   private_subnet_name = var.private_subnet_name
