@@ -217,7 +217,7 @@ resource "aws_autoscaling_group" "agent_asg" {
         version            = var.agent_lt_version
       }
 
-      # Why???
+      # The mixed instance policy allows multiple override instance types
       dynamic "override" {
         for_each = var.instance_type_agents
         content {
