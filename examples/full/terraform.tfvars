@@ -32,7 +32,8 @@ environment = "prod"
 
 executors = 4
 
-instance_type = ["t3a.xlarge", "t3.xlarge", "t2.xlarge"]
+instance_type_controller = ["t3.2xlarge"]
+instance_type_agents     = ["t3.xlarge", "t3a.xlarge", "t2.xlarge"]
 
 jenkins_version = "2.249.1"
 

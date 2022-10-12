@@ -208,7 +208,7 @@ resource "aws_autoscaling_group" "agent_asg" {
     instances_distribution {
       on_demand_base_capacity                  = 0
       on_demand_percentage_above_base_capacity = 0
-      spot_instance_pools                      = length(var.instance_type)
+      spot_instance_pools                      = length(var.instance_type_agents)
     }
 
     launch_template {
@@ -217,8 +217,9 @@ resource "aws_autoscaling_group" "agent_asg" {
         version            = var.agent_lt_version
       }
 
+      # The mixed instance policy allows multiple override instance types
       dynamic "override" {
-        for_each = var.instance_type
+        for_each = var.instance_type_agents
         content {
           instance_type = override.value
         }
@@ -265,7 +266,7 @@ resource "aws_launch_template" "agent_lt" {
   key_name      = var.key_name
   ebs_optimized = false
 
-  instance_type = var.instance_type[0]
+  instance_type = var.instance_type_agents[0]
   user_data     = data.template_cloudinit_config.agent_init.rendered
 
   monitoring {
@@ -494,7 +495,7 @@ resource "aws_autoscaling_group" "master_asg" {
       }
 
       override {
-        instance_type = var.instance_type[0]
+        instance_type = var.instance_type_controller[0]
       }
 
     }
@@ -538,7 +539,7 @@ resource "aws_launch_template" "master_lt" {
   key_name      = var.key_name
   ebs_optimized = false
 
-  instance_type = var.instance_type[0]
+  instance_type = var.instance_type_controller[0]
   user_data     = data.template_cloudinit_config.master_init.rendered
 
   monitoring {
