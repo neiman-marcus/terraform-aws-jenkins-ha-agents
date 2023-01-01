@@ -198,3 +198,8 @@ variable "vpc_name" {
   type        = string
 }
 
+variable "time_to_start" {
+  description = "Set a timeout in seconds when systemctl will restart service due of inactivity, if instance became smaller than timeout has to be bigger. Default 90 seconds."
+  type        = string
+  default     = 90
+}

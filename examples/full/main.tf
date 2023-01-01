@@ -27,6 +27,7 @@ module "jenkins_ha_agents" {
   agent_max         = var.agent_max
   agent_min         = var.agent_min
   agent_volume_size = var.agent_volume_size
+  time_to_start     = var.time_to_start
 
   efs_mode                   = var.efs_mode
   efs_provisioned_throughput = var.efs_provisioned_throughput

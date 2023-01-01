@@ -3,6 +3,12 @@ variable "admin_password" {
   type        = string
 }
 
+variable "time_to_start" {
+  description = "Set a timeout in seconds when systemctl will restart service due of inactivity, if instance became smaller than timeout has to be bigger. Default 90 seconds."
+  type        = string
+  default     = 90
+}
+
 variable "agent_lt_version" {
   description = "The version of the agent launch template to use. Only use if you need to programatically select an older version of the launch template. Not recommended to change."
   type        = string
