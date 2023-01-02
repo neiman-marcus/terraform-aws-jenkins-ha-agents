@@ -43,6 +43,8 @@ module "jenkins_ha_agents" {
   scale_down_number = var.scale_down_number
   scale_up_number   = var.scale_up_number
 
+  time_to_start = var.time_to_start
+
   auto_update_plugins_cron = var.auto_update_plugins_cron
 
   custom_plugins = templatefile("init/custom_plugins.cfg", {})

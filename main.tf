@@ -725,6 +725,7 @@ data "template_cloudinit_config" "master_init" {
         aws_region      = var.region,
         jenkins_version = var.jenkins_version,
         master_storage  = aws_efs_file_system.master_efs.id
+        time_to_start   = var.time_to_start
       }
     )
   }
