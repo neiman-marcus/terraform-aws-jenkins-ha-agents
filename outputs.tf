@@ -8,6 +8,11 @@ output "agent_iam_role" {
   value       = aws_iam_role.agent_iam_role.name
 }
 
+output "efs_arn" {
+  description = "ARN of the EFS share, so you can use it elsewhere."
+  value = aws_efs_file_system.master_efs.arn
+}
+
 output "lb_dns_name" {
   value       = aws_lb.lb.dns_name
   description = "The DNS name of the load balancer."
