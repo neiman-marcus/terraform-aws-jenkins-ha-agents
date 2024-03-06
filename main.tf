@@ -267,7 +267,7 @@ resource "aws_launch_template" "agent_lt" {
   ebs_optimized = false
 
   instance_type = var.instance_type_agents[0]
-  user_data     = data.template_cloudinit_config.agent_init.rendered
+  user_data     = data.cloudinit_config.agent_init.rendered
 
   monitoring {
     enabled = true
@@ -408,7 +408,7 @@ resource "aws_cloudwatch_log_group" "agent_logs" {
 }
 
 #using templatefile as per the new terraform provider version
-data "template_cloudinit_config" "agent_init" {
+data "cloudinit_config" "agent_init" {
   gzip          = true
   base64_encode = true
 
@@ -540,7 +540,7 @@ resource "aws_launch_template" "master_lt" {
   ebs_optimized = false
 
   instance_type = var.instance_type_controller[0]
-  user_data     = data.template_cloudinit_config.master_init.rendered
+  user_data     = data.cloudinit_config.master_init.rendered
 
   monitoring {
     enabled = true
@@ -691,7 +691,7 @@ resource "aws_cloudwatch_log_group" "master_logs" {
   tags              = merge(var.tags, { "Name" = "${var.application}-master-logs" })
 }
 
-data "template_cloudinit_config" "master_init" {
+data "cloudinit_config" "master_init" {
   gzip          = true
   base64_encode = true
 
